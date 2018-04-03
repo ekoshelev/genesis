@@ -1,25 +1,7 @@
 
 /*
-Game 0 -- PA02
-This is a ThreeJS program which implements a simple game
-The user moves a cube around the board trying to knock balls into a cone
-
-Functionality added (02-21-2018):
-- key control Q rotates the camera in increments of 45 degrees to the left
-- key control E rotates the camera in increments of 45 degrees to the right
-- the player avatar is now a monkey
-- a NonPlayableCharacter (NPC) was added
-- When the NPC hits the avatar, the avatar loses a point of health and it is
-  sent to a random position
-- When the avatar reaches zero health, there is a You Lose scene
-- key control R restarts the game
-- a start screen is added
-- key control P initiates play
-
-Additional functionality from Dani Sim.
-If collide with cube, gain a health point
+PA03 - MVP
 */
-
 
 	// First we declare the variables that hold the objects we need
 	// in the animation code
@@ -37,9 +19,6 @@ If collide with cube, gain a health point
 
 	var startScreen, startMesh, startCam;
 
-
-
-
 	var controls =
 	     {fwd:false, bwd:false, left:false, right:false,
 				speed:10, fly:false, reset:false,
@@ -48,12 +27,10 @@ If collide with cube, gain a health point
 	var gameState =
 	     {score:0, health:10, scene:'startscreen', camera:'startCam' }
 
-
 	// Here is the main game control
   init(); //
 	initControls();
 	animate();  // start the animation loop!
-
 
 	function createStartScreen(){
 		startScreen = initScene();
@@ -131,9 +108,9 @@ If collide with cube, gain a health point
 
 
 			// create the ground and the skybox
-			var ground = createGround('grass.png');
+			var ground = createGround('wasteldgrnd.jpg');
 			scene.add(ground);
-			var skybox = createSkyBox('sky.jpg',1);
+			var skybox = createSkyBox('wasteland.jpg',1);
 			scene.add(skybox);
 
 			// create the avatar camera
@@ -289,8 +266,6 @@ function addCubes(){
 		});
 	}
 
-	/* We don't do much here, but we could do more!
-	*/
 	function initScene(){
 		//scene = new THREE.Scene();
     var scene = new Physijs.Scene();
@@ -313,7 +288,6 @@ function addCubes(){
 		renderer.shadowMap.enabled = true;
 		renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 	}
-
 
 	function createPointLight(){
 		var light;
@@ -658,12 +632,23 @@ function addCubes(){
 		suzanne.lookAt(avatar.position);
 	}
 
+	function addTumbleweed(){
+		var geometry = new THREE.CylinderGeometry( 5, 5, 20, 32);
+		var texture = new THREE.TextureLoader().load('../images/tumbleweed.png');
+		var material = new THREE.MeshLambertMaterial( { color: 0xffffff,  map: texture});
+		material.receiveShadow = true;
 
+		material.rotateX(Math.PI/2);
+		return material
+	}
 
 	function animate() {
 		var distance = 0;
 		requestAnimationFrame( animate );
 
+		// if (screenClock.getElapsedTime() % 30 == 0){
+		// 	addTumbleweed();
+		// }
 		switch(gameState.scene) {
 
 			case "startscreen":
@@ -680,7 +665,7 @@ function addCubes(){
 			case "main":
 				updateAvatar();
 				//updateEnemy();
-				
+
 	    			scene.simulate();
 				if (gameState.camera!= 'none'){
 					renderer.render( scene, gameState.camera );
