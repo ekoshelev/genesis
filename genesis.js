@@ -145,14 +145,10 @@ If collide with cube, gain a health point
 			//scene.add(avatar);
 			gameState.camera = avatarCam;*/
 			initMonkeyAvatar();
-			initMonkeyCheerleader();
-			initEnemy();
+			//initMonkeyCheerleader();
+			//initEnemy();
 			addBalls();
 			addCubes();
-
-			cone = createConeMesh(4,6);
-			cone.position.set(10,3,7);
-			scene.add(cone);
 			//playGameMusic();
 
 	}
@@ -385,33 +381,6 @@ function addCubes(){
 
 
 	}
-	function initMonkeyCheerleader(){
-			var loader = new THREE.JSONLoader();
-		loader.load("../models/suzanne.json",
-					function ( geometry, materials ) {
-						console.log("loading suzanne");
-						var material = //materials[ 0 ];
-						new THREE.MeshLambertMaterial( { color: 0x8B008B } );
-						suzanne = new THREE.Mesh( geometry, material );
-						var suzy2 = suzanne.clone(false);
-						console.log("created suzanne mesh");
-						console.log(JSON.stringify(suzanne.scale));// = new THREE.Vector3(4.0,1.0,1.0);
-						scene.add( suzanne  );
-						var s = 0.5;
-						suzanne.scale.y=s;
-						suzanne.scale.x=s;
-						suzanne.scale.z=s;
-						suzanne.position.z = 7;
-						suzanne.position.y = 7;
-						suzanne.position.x = 10;
-						suzanne.castShadow = true;
-						//
-					},
-					function(xhr){
-						console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );},
-					function(err){console.log("error in loading: "+err);}
-				)
-	}
 	function createAvatar(){
 		//var geometry = new THREE.SphereGeometry( 4, 20, 20);
 		var geometry = new THREE.BoxGeometry( 5, 5, 6);
@@ -505,19 +474,6 @@ function addCubes(){
 		scene.add(enemy);
 	}
 
-
-	function createConeMesh(r,h){
-		var geometry = new THREE.ConeGeometry( r, h, 32);
-		var texture = new THREE.TextureLoader().load( '../images/tile.jpg' );
-		texture.wrapS = THREE.RepeatWrapping;
-		texture.wrapT = THREE.RepeatWrapping;
-		texture.repeat.set( 1, 1 );
-		var material = new THREE.MeshLambertMaterial( { color: 0xffffff,  map: texture ,side:THREE.DoubleSide} );
-		var pmaterial = new Physijs.createMaterial(material,0.9,0.5);
-		var mesh = new Physijs.ConeMesh( geometry, pmaterial, 0 );
-		mesh.castShadow = true;
-		return mesh;
-	}
 
 	function createRingMesh(r, t){
 		var geometry = new THREE.TorusGeometry( r, t, 16, 100 );
@@ -723,8 +679,8 @@ function addCubes(){
 
 			case "main":
 				updateAvatar();
-				updateEnemy();
-				updateCheerleader();
+				//updateEnemy();
+				
 	    			scene.simulate();
 				if (gameState.camera!= 'none'){
 					renderer.render( scene, gameState.camera );
