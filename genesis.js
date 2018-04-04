@@ -9,6 +9,7 @@ PA03 - MVP
 	var camera, avatarCam;  // we have two cameras in the main scene
 	var avatar;
 	var enemy;
+	var key1;
 	// here are some mesh objects ...
 
 	var cone;
@@ -127,6 +128,7 @@ PA03 - MVP
 			addBalls();
 			addCubes();
 			//playGameMusic();
+			initKeyLevelOne()
 
 	}
 
@@ -410,6 +412,23 @@ function addCubes(){
 				)
 
 	}
+
+	function initKeyLevelOne(){
+		var geometry = new THREE.DodecahedronGeometry(0.5,0);
+		var material = new THREE.MeshLambertMaterial( { color: 0x009999 } );
+		var pmaterial = new Physijs.createMaterial(material,0.9,0.5);
+		key1 = new Physijs.BoxMesh( geometry, pmaterial, 0 )
+		key1.position.set(20,2,20);
+		key1.addEventListener('collision',
+		function( other_object, relative_velocity, relative_rotation, contact_normal ){
+			if (other_object == avatar) {
+				gameState.scene = 'youwon';
+			}
+		}
+	)
+
+		scene.add(key1);
+}
 
 	function initEnemy(){
 		var geometry = new THREE.BoxGeometry( 7, 7, 7);
