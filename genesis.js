@@ -18,7 +18,9 @@ PA03 - MVP
 
 	var endScene, endCamera, endText, endScene2;
 
-	var startScreen, startMesh, startCam;
+	var startScreen, startMesh, startCam, levelOneScreen;
+
+	var textGeometry;
 
 	var controls =
 	     {fwd:false, bwd:false, left:false, right:false,
@@ -37,19 +39,42 @@ PA03 - MVP
 		startScreen = initScene();
 		startText = initPlaneMesh('startscreen.png');
 		startScreen.add(startText);
-		startText.scale.set(150,60,1);
-		startText.position.set(-15,20,-20);
-		startText.rotateY(0.64);
+		startText.scale.set(250,120,1);
+		startText.position.set(0,0,0);
 		startScreen.add(startText);
-		var startLight = createPointLight();
-		startLight.position.set(-5,20,40);
-		var startLight2 = createPointLight();
-		startLight2.position.set(30,20,50);
-		startScreen.add(startLight);
-		startScreen.add(startLight2);
-		startCam = new THREE.PerspectiveCamera( 57, window.innerWidth / window.innerHeight*1.8, 0.1, 1000 );
-		startCam.position.set(15,20,20);
-		startCam.lookAt(0,20,0);
+		//LIGHTS
+		var light1 = createPointLight();
+		var light2 = createPointLight();
+		light1.position.set(10,0,150);
+		light2.position.set(-10,0,150);
+		startScreen.add(light1);
+		startScreen.add(light2);
+		//CAMERA
+		startCam = new THREE.PerspectiveCamera( 90, window.innerWidth / window.innerHeight, 1, 1000 );
+		startCam.position.set(0,0,50);
+		startCam.lookAt(0,0,0);
+	}
+
+	function levelOneScreen(){
+		levelOneScreen = initScene();
+		var oneBackground = initPlaneMesh('startlevel1.png');
+		oneBackground.scale.set(250,120,1);
+		oneBackground.position.set(0,0,0);
+		levelOneScreen.add(oneBackground);
+		//LIGHTS
+		var light1 = createPointLight();
+		var light2 = createPointLight();
+		light1.position.set(10,0,150);
+		light2.position.set(-10,0,150);
+		levelOneScreen.add(light1);
+		levelOneScreen.add(light2);
+		//TEXT
+		initTextMesh();
+		console.log("added textMesh to scene");
+		//CAMERA
+		startCam = new THREE.PerspectiveCamera( 90, window.innerWidth / window.innerHeight, 1, 1000 );
+		startCam.position.set(0,0,50);
+		startCam.lookAt(0,0,0);
 	}
 
 	function createEndScene(){
@@ -79,6 +104,37 @@ PA03 - MVP
 		endScene2.addEventListener('keyup')
 	}
 
+	function initTextMesh() {
+		var loader = new THREE.FontLoader();
+		loader.load( '/fonts/helvetiker_regular.typeface.json', createTextMesh);
+		console.log("preparing to load the font");
+	}
+
+	function createTextMesh(font){
+		var textGeometry = new THREE.TextGeometry('Level One: \nThe Wasteland',
+					 {
+						 font: font,
+						 size: 7,
+						 height: 2,
+						 curveSegments: 30,
+						 bevelEnabled: true,
+						 bevelThickness: 1,
+						 bevelSize: 0.5,
+						 bevelSegments: 8
+					 }
+				 );
+
+		 var textMaterial =
+			 new THREE.MeshLambertMaterial( { color: 0x800000 } );
+
+		 var textMesh =
+			 new THREE.Mesh( textGeometry, textMaterial );
+		 textMesh.position.set(-30, 0, 5);
+		 levelOneScreen.add(textMesh);
+	}
+
+
+
 	/**
 	  To initialize the scene, we initialize each of its components
 	*/
@@ -90,6 +146,7 @@ PA03 - MVP
 			createEndScene2();
 			initRenderer();
 			createMainScene();
+			levelOneScreen();
 	}
 
 
@@ -137,6 +194,8 @@ PA03 - MVP
 	}
 
 
+
+
 	function randN(n){
 		return Math.random()*n;			scene.add(avatar);
 	}
@@ -165,6 +224,7 @@ PA03 - MVP
 			)
 		}
 	}
+
 
 // function to add cubes to scene that when collided with, the avatar gains a
 // health point
@@ -226,7 +286,7 @@ function addCubes(){
 			// creating a textured plane which receives shadows
 			var geometry = new THREE.PlaneGeometry( 1, 1, 128);
 			var texture = new THREE.TextureLoader().load( '../images/' +image );
-			var material = new THREE.MeshLambertMaterial( { color: 0xaaaaaa,  map: texture ,side:THREE.DoubleSide} );
+			var material = new THREE.MeshLambertMaterial( { color: 0xaaaaaa,  map: texture, side:THREE.DoubleSide} );
 			planeMesh = new THREE.Mesh( geometry, material );
 			return planeMesh;
 		}
@@ -540,6 +600,9 @@ function addCubes(){
 			addRings();
 			return;
 		}else if (gameState.scene == 'startscreen' && event.key=='p') {
+			gameState.scene = 'level1';
+			return;
+		}else if (gameState.scene == 'level1' && event.key=='p') {
 			createClock();
 			screenClock.start();
 			gameState.scene = 'main';
@@ -675,6 +738,11 @@ function addCubes(){
 				renderer.render(startScreen, startCam);
 				break;
 
+			case "level1":
+				scene.simulate();
+				renderer.render(levelOneScreen, startCam);
+				break;
+
 			case "youwon":
 				screenClock.stop();
 				endText.rotateY(0.005);
@@ -702,7 +770,7 @@ function addCubes(){
 		}
 
 		//draw heads up display ..
-		if (gameState.scene != 'startscreen'){
+		if (gameState.scene != 'startscreen' && gameState.scene != 'level1' ){
 			var info = document.getElementById("info");
 		 info.innerHTML='<div style="font-size:24pt">Score:  ' + gameState.score +
 		 '         Health:  ' + gameState.health + '         Time:  ' + screenClock.getElapsedTime() + '</div>' ;
