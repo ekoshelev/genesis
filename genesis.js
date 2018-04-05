@@ -154,6 +154,7 @@ Team 21
 			addBalls();
 			addCubes();
 			initKeyLevelOne()
+			addToxicWaste();
 	}
 
 	//Level 2: REGENESIS transition screen, press 'p' to continue
@@ -314,9 +315,40 @@ function addCubes(){
 		}
 	}
 
+	//ADD TOXIC WASTE TO SCENE
+	function addToxicWaste(){
+		for(i=0;i<10;i++){
+			var tox = initToxicWaste();
+			tox.position.set(randN(20)+15,30,randN(20)+15);
+			scene.add(tox);
+			tox.addEventListener( 'collision',
+				function( other_object, relative_velocity, relative_rotation, contact_normal ) {
+					if (other_object == avatar){
+						console.log("avatar hit toxic waste, health -1");
+						gameState.health -= 1;  // Score goes up by 1
+						if (gameState.health==0) {
+							gameState.scene='youlose';
+						}
+						this.position.y = this.position.y - 100;
+						this.__dirtyPosition = true;
+					}
+				}
+			)
+		}
+	}
 
 //HELPER/INITIALIZATION METHODS
 
+	//TOXIC WASTE
+function initToxicWaste(){
+	var geometry = new THREE.CylinderGeometry( 1, 1, 3, 30);
+	var texture = new THREE.TextureLoader().load( '../images/toxicwaste.png');
+	var material = new THREE.MeshLambertMaterial( { color: 0xaaaaaa,  map: texture, side:THREE.DoubleSide} );
+	var toxMesh = new Physijs.BoxMesh( geometry, material );
+	toxMesh.setDamping(0.1,0.1);
+	toxMesh.castShadow = true;
+	return toxMesh;
+}
 
 	//PLANE
 	function initPlaneMesh(image){
