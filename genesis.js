@@ -18,8 +18,9 @@ Team 21
 	var endCamera, endText;
 
 	//Transition Scene Variables
-	var levelOneScreen;
 	var textGeometry;
+	var levelOneScreen;
+	var levelTwoScreen;
 
 	//Objects
 	var key1;
@@ -58,6 +59,7 @@ Team 21
 			initRenderer();
 			createMainScene();
 			levelOneScreen();
+			levelTwoScreen();
 	}
 
 
@@ -103,7 +105,7 @@ Team 21
 		startCam.lookAt(0,0,0);
 	}
 
-	//Level 1: WASTLAND transition screen, press 'p' to continue
+	//Level 1: WASTELAND transition screen, press 'p' to continue
 	function levelOneScreen(){
 		levelOneScreen = initScene();
 		var oneBackground = initPlaneMesh('startlevel1.png');
@@ -118,7 +120,7 @@ Team 21
 		levelOneScreen.add(light1);
 		levelOneScreen.add(light2);
 		//TEXT
-		initTextMesh();
+		initTextMesh('Level One: \nThe Wasteland', levelOneScreen, 0x8B0000);
 		console.log("added textMesh to scene");
 		//CAMERA
 		startCam = new THREE.PerspectiveCamera( 90, window.innerWidth / window.innerHeight, 1, 1000 );
@@ -154,6 +156,29 @@ Team 21
 			initKeyLevelOne()
 	}
 
+	//Level 2: REGENESIS transition screen, press 'p' to continue
+	function levelTwoScreen(){
+		levelTwoScreen = initScene();
+		var twoBackground = initPlaneMesh('startlevel2.png');
+		twoBackground.scale.set(250,120,1);
+		twoBackground.position.set(0,0,0);
+		levelTwoScreen.add(twoBackground);
+		//LIGHTS
+		var light1 = createPointLight();
+		var light2 = createPointLight();
+		light1.position.set(10,0,150);
+		light2.position.set(-10,0,150);
+		levelTwoScreen.add(light1);
+		levelTwoScreen.add(light2);
+		//TEXT
+		initTextMesh('Level Two: \nRegenesis', levelTwoScreen, 0x336633);
+		console.log("added textMesh to scene");
+		//CAMERA
+		startCam = new THREE.PerspectiveCamera( 90, window.innerWidth / window.innerHeight, 1, 1000 );
+		startCam.position.set(0,0,50);
+		startCam.lookAt(0,0,0);
+	}
+
 	//Render youwon scene
 	function createEndScene(){
 		endScene = initScene();
@@ -185,34 +210,32 @@ Team 21
 	//METHODS FOR ADDING OBJECTS TO SCENES
 
 	//ADDING TEXT
-	function initTextMesh() {
+	function initTextMesh(string, level, color) {
 		var loader = new THREE.FontLoader();
-		loader.load( '/fonts/helvetiker_regular.typeface.json', createTextMesh);
-		console.log("preparing to load the font");
-	}
+		loader.load( '/fonts/helvetiker_regular.typeface.json', function createTextMesh(font){
+			var textGeometry = new THREE.TextGeometry(string,
+						 {
+							 font: font,
+							 size: 7,
+							 height: 2,
+							 curveSegments: 30,
+							 bevelEnabled: true,
+							 bevelThickness: 1,
+							 bevelSize: 0.5,
+							 bevelSegments: 8
+						 }
+					 );
+					 var textMaterial =
+						 new THREE.MeshLambertMaterial( { color: color } );
 
-	function createTextMesh(font){
-		var textGeometry = new THREE.TextGeometry('Level One: \nThe Wasteland',
-					 {
-						 font: font,
-						 size: 7,
-						 height: 2,
-						 curveSegments: 30,
-						 bevelEnabled: true,
-						 bevelThickness: 1,
-						 bevelSize: 0.5,
-						 bevelSegments: 8
-					 }
+					 var textMesh =
+						 new THREE.Mesh( textGeometry, textMaterial );
+					 textMesh.position.set(-30, 0, 5);
+					 level.add(textMesh);
+				 }
 				 );
-
-		 var textMaterial =
-			 new THREE.MeshLambertMaterial( { color: 0x800000 } );
-
-		 var textMesh =
-			 new THREE.Mesh( textGeometry, textMaterial );
-		 textMesh.position.set(-30, 0, 5);
-		 levelOneScreen.add(textMesh);
 	}
+
 
 	//ADD CLOCK (for display bar)
 	function createClock(){
@@ -429,7 +452,7 @@ function addCubes(){
 			key1.addEventListener('collision',
 			function( other_object, relative_velocity, relative_rotation, contact_normal ){
 				if (other_object == avatar) {
-					gameState.scene = 'youwon';
+					gameState.scene = 'level2';
 				}
 			}
 		)
@@ -577,7 +600,7 @@ function addCubes(){
 			gameState.scene = 'main';
 			gameState.score = 0;
 			gameState.health = 10;
-			enemy.position.set(randN(20),30,randN(20));
+			//enemy.position.set(randN(20),30,randN(20));
 			addBalls();
 			addCubes();
 			addRings();
@@ -684,6 +707,11 @@ function addCubes(){
 			case "level1":
 				scene.simulate();
 				renderer.render(levelOneScreen, startCam);
+				break;
+
+			case "level2":
+				scene.simulate();
+				renderer.render(levelTwoScreen, startCam);
 				break;
 
 			case "youwon":
