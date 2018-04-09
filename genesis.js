@@ -150,11 +150,15 @@ Team 21
 
 			// AVATAR CAMERA
 			avatarCam = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.1, 1000 );
-			initMonkeyAvatar();
+		
 			addBalls();
 			addCubes();
 			initKeyLevelOne()
-			addToxicWaste();
+			addToxicWaste();	
+			avatar = createAvatar();
+			scene.add(avatar);
+			gameState.camera = avatarCam;
+
 	}
 
 	//Level 2: REGENESIS transition screen, press 'p' to continue
@@ -421,8 +425,9 @@ function initToxicWaste(){
 		//AVATAR
 		function createAvatar(){
 			//var geometry = new THREE.SphereGeometry( 4, 20, 20);
-			var geometry = new THREE.BoxGeometry( 5, 5, 6);
-			var material = new THREE.MeshLambertMaterial( { color: 0xffff00} );
+			var geometry = new THREE.OctahedronGeometry(3, 0);
+			var texture = new THREE.TextureLoader().load( '../images/simthing.jpg' );
+			var material = new THREE.MeshLambertMaterial( { color: 0xffffff,  map: texture ,side:THREE.DoubleSide} );
 			var pmaterial = new Physijs.createMaterial(material,0.9,0.5);
 			//var mesh = new THREE.Mesh( geometry, material );
 			var mesh = new Physijs.BoxMesh( geometry, pmaterial );
@@ -436,41 +441,26 @@ function initToxicWaste(){
 
 		//MONKEY AVATAR
 		function initMonkeyAvatar(){
-			var myObjs = {};
-			var loader = new THREE.JSONLoader();
-			return loader.load("../models/suzanne.json",
-						function ( geometry, materials ) {
-							console.log("loading suzanne");
-							var material = //materials[ 0 ];
-							new THREE.MeshLambertMaterial( { color: 0x00ff00 } );
-							var pmaterial = new Physijs.createMaterial(material,0.9,0.5);
-							avatar = new Physijs.BoxMesh( geometry, pmaterial );
-							console.log("created suzanne mesh");
-							console.log(JSON.stringify(avatar.scale));// = new THREE.Vector3(4.0,1.0,1.0);
-							var s = 0.5;
-							avatar.scale.y=s;
-							avatar.scale.x=s;
-							avatar.scale.z=s;
+		//var geometry = new THREE.SphereGeometry( 4, 20, 20);
+		var geometry = new THREE.BoxGeometry( 5, 5, 6);
+		var material = new THREE.MeshLambertMaterial( { color: 0xffff00} );
+		var pmaterial = new Physijs.createMaterial(material,0.9,0.5);
+		//var mesh = new THREE.Mesh( geometry, material );
+		var mesh = new Physijs.BoxMesh( geometry, pmaterial );
+		mesh.setDamping(0.1,0.1);
+		mesh.castShadow = true;
 
-							avatar.setDamping(0.1,0.1);
-							avatar.castShadow = true;
+		avatarCam.position.set(0,4,0);
+		avatarCam.lookAt(0,4,10);
+		mesh.add(avatarCam);
 
-							avatarCam.position.set(0,4,0);
-							avatarCam.lookAt(0,4,10);
-							avatar.add(avatarCam);
+  /*
+    var scoop1 = createBoxMesh2(0xff0000,10,1,0.1);
+		scoop1.position.set(0,-2,5);
+		mesh.add(scoop1);
+    */
 
-							avatar.translateY(20);
-							avatarCam.translateY(-4);
-							avatarCam.translateZ(3);
-							scene.add(avatar);
-							gameState.camera = avatarCam;
-							//
-
-						},
-						function(xhr){
-							console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );},
-						function(err){console.log("error in loading: "+err);}
-					)
+		return mesh;
 
 		}
 
