@@ -14,7 +14,7 @@ Team 21
 	// var enemy;
 
 	//End Scene Variables
-	var endScene, endScene2;
+	var endScene;
 	var endCamera, endText;
 
 	//Transition Scene Variables
@@ -56,7 +56,7 @@ Team 21
 			createStartScreen();
 			scene = initScene();
 			createEndScene();
-			createEndScene2();
+			// createEndScene2();
 			initRenderer();
 			createMainScene();
 			levelOneScreen();
@@ -185,10 +185,10 @@ Team 21
 		startCam.lookAt(0,0,0);
 	}
 
-	//Render youwon scene
+	//Render end of level 1 scene
 	function createEndScene(){
 		endScene = initScene();
-		endText = createSkyBox('youwon.png',10);
+		endText = createSkyBox('endLevel1.png',10);
 		endScene.add(endText);
 		var light1 = createPointLight();
 		light1.position.set(0,200,20);
@@ -200,18 +200,18 @@ Team 21
 	}
 
 	//Render youlose scene
-	function createEndScene2(){
-		endScene2 = initScene();
-		endText2 = createSkyBox('gameover.png', 5);
-		endScene2.add(endText2);
-		var light1 = createPointLight();
-		light1.position.set(0,200,20);
-		endScene2.add(light1);
-		endCamera = new THREE.PerspectiveCamera(90,window.innerWidth / window.innerHeight, 0.1, 1000);
-		endCamera.position.set(0,50,1);
-		endCamera.lookAt(0,0,0);
-		endScene2.addEventListener('keyup')
-	}
+	// function createEndScene2(){
+	// 	endScene2 = initScene();
+	// 	endText2 = createSkyBox('gameover.png', 5);
+	// 	endScene2.add(endText2);
+	// 	var light1 = createPointLight();
+	// 	light1.position.set(0,200,20);
+	// 	endScene2.add(light1);
+	// 	endCamera = new THREE.PerspectiveCamera(90,window.innerWidth / window.innerHeight, 0.1, 1000);
+	// 	endCamera.position.set(0,50,1);
+	// 	endCamera.lookAt(0,0,0);
+	// 	endScene2.addEventListener('keyup')
+	// }
 
 	//METHODS FOR ADDING OBJECTS TO SCENES
 
@@ -504,7 +504,7 @@ function initToxicWaste(){
 			key1.addEventListener('collision',
 			function( other_object, relative_velocity, relative_rotation, contact_normal ){
 				if (other_object == avatar) {
-					gameState.scene = 'level2';
+					gameState.scene = 'youwon';
 				}
 			}
 		)
@@ -794,11 +794,11 @@ function initToxicWaste(){
 					renderer.render( scene, gameState.camera );
 				}
 				break;
-			case "youlose":
-				screenClock.stop();
-				endText.rotateY(1.005);
-				renderer.render(endScene2, endCamera);
-				break;
+			// case "youlose":
+			// 	screenClock.stop();
+			// 	endText.rotateY(1.005);
+			// 	renderer.render(endScene2, endCamera);
+			// 	break;
 
 			default:
 			  console.log("don't know the scene "+gameState.scene);
