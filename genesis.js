@@ -11,7 +11,7 @@ Team 21
 	var scene, renderer;
 	var camera, avatarCam;
 	var avatar;
-	var enemy;
+	// var enemy;
 
 	//End Scene Variables
 	var endScene, endScene2;
@@ -34,13 +34,14 @@ Team 21
 		    camera:camera}
 
 	var gameState =
-	     {score:0, health:10, scene:'startscreen', camera:'startCam' }
+	     {litterScore:0, health:10, scene:'startscreen', camera:'startCam' }
 
 	//DISPLAY BAR
 	if (gameState.scene != 'startscreen' && gameState.scene != 'level1' ){
 		var info = document.getElementById("info");
 	 info.innerHTML='<div style="font-size:24pt">Score:  ' + gameState.score +
-	 '         Health:  ' + gameState.health + '         Time:  ' + screenClock.getElapsedTime() + '</div>' ;
+	 '         Health:  ' + gameState.health + '         Litter Picked Up:  ' + gameState.litterScore +
+	  '         Time:  ' + screenClock.getElapsedTime() + '</div>' ;
 	}
 
   //INITIALIZE GAME
@@ -150,11 +151,11 @@ Team 21
 
 			// AVATAR CAMERA
 			avatarCam = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.1, 1000 );
-		
+
 			addBalls();
 			addCubes();
 			initKeyLevelOne()
-			addToxicWaste();	
+			addToxicWaste();
 			avatar = createAvatar();
 			scene.add(avatar);
 			gameState.camera = avatarCam;
@@ -247,7 +248,7 @@ Team 21
 		screenClock = new THREE.Clock();
 	}
 
-	//ADD RINGS
+	//ADD LITTER TYPE 1
 	function addRings(){
 		var numRings = 6;
 		for (i=0;i<numRings;i++){
@@ -257,21 +258,20 @@ Team 21
 			// when collided with, the enemy/npc is teleported to a new location away
 			//from the avatar (like a protection object)
 			ring.addEventListener('collision',
-				function( other_object, relative_velocity, relative_rotation, contact_normal ){
-					if (other_object == avatar) {
-						enemy.position.set(randN(20)+15,30,randN(20)+15);
-						enemy.__dirtyPosition = true;
-						// Cone disappears upon collision
-						this.position.y = this.position.y - 100;
-						this.__dirtyPosition = true;
-
-					}
+			function( other_object, relative_velocity, relative_rotation, contact_normal ){
+				if (other_object == avatar) {
+					console.log("avatar picked up 1 litter");
+					soundEffect('good.wav');
+					gameState.litterScore += 1;
+					// Get rid of the cube once collision occurs
+					this.position.y = this.position.y - 100;
+					this.__dirtyPosition = true;
 				}
-			)
+			})
 		}
 	}
 
-//ADD CUBES TO SCENE
+//ADD LITTER TYPE 2
 function addCubes(){
 	var numCubes = 3
 	for (i=0;i<numCubes;i++){
@@ -282,7 +282,9 @@ function addCubes(){
 		cube.addEventListener('collision',
 			function( other_object, relative_velocity, relative_rotation, contact_normal ){
 				if (other_object == avatar) {
-					gameState.health += 1;
+					console.log("avatar picked up 1 litter");
+					soundEffect('good.wav');
+					gameState.litterScore += 1;
 					// Get rid of the cube once collision occurs
 					this.position.y = this.position.y - 100;
 					this.__dirtyPosition = true;
@@ -293,7 +295,7 @@ function addCubes(){
 	}
 }
 
-	//ADD BALLS TO SCENE
+	//ADD LITTER TYPE 3
 	function addBalls(){
 		var numBalls = 2
 		for(i=0;i<numBalls;i++){
@@ -302,13 +304,10 @@ function addCubes(){
 			scene.add(ball);
 			ball.addEventListener( 'collision',
 				function( other_object, relative_velocity, relative_rotation, contact_normal ) {
-					if (other_object==cone){
-						console.log("ball "+i+" hit the cone");
+					if (other_object==avatar){
+						console.log("avatar picked up 1 litter");
 						soundEffect('good.wav');
-						gameState.score += 1;  // Score goes up by 1
-						if (gameState.score==numBalls) {
-							gameState.scene='youwon';
-						}
+						gameState.litterScore += 1;  // Score goes up by 1
 						// Make the ball drop below the scene
 						//(Threejs doesn't let us remove it from the scene)
 						this.position.y = this.position.y - 100;
@@ -316,6 +315,37 @@ function addCubes(){
 					}
 				}
 			)
+		}
+	}
+
+	//ADD LITTER TYPE 4
+	function addIcos(){
+		var numIco = 2
+		for(i=0;i<numIco;i++){
+			var ico = createIcosahedron();
+			ico.position.set(randN(20)+15,30,randN(20)+15);
+			scene.add(ico);
+			ico.addEventListener( 'collision',
+				function( other_object, relative_velocity, relative_rotation, contact_normal ) {
+					if (other_object==avatar){
+						console.log("avatar picked up 1 litter");
+						soundEffect('good.wav');
+						gameState.litterScore += 1;  // Score goes up by 1
+						//(Threejs doesn't let us remove it from the scene)
+						this.position.y = this.position.y - 100;
+						this.__dirtyPosition = true;
+					}
+				}
+			)
+		}
+	}
+
+	//ADD TUMBLEWEED
+	function addTumbleweed(){
+		for(i=0;i<10;i++){
+			var tumble = createTumbleweed();
+			tumble.position.set(randN(20)+15,30,randN(20)+15);
+			scene.add(tumble);
 		}
 	}
 
@@ -485,7 +515,7 @@ function initToxicWaste(){
 		//RING
 		function createRingMesh(r, t){
 			var geometry = new THREE.TorusGeometry( r, t, 16, 100 );
-			var material = new THREE.MeshLambertMaterial( { color: 0xB869FF } );
+			var material = new THREE.MeshLambertMaterial( { color: 0xa7a775 } );
 			var pmaterial = new Physijs.createMaterial(material,0.9,0.5);
 			var mesh = new Physijs.BoxMesh( geometry, material );
 			mesh.setDamping(0.1,0.1);
@@ -498,7 +528,7 @@ function initToxicWaste(){
 		function createBall(){
 			//var geometry = new THREE.SphereGeometry( 4, 20, 20);
 			var geometry = new THREE.SphereGeometry( 1, 16, 16);
-			var material = new THREE.MeshLambertMaterial( { color: 0xffff00} );
+			var material = new THREE.MeshLambertMaterial( { color: 0xa98e72} );
 			var pmaterial = new Physijs.createMaterial(material,0.9,0.5);
 	    var mesh = new Physijs.BoxMesh( geometry, material );
 			mesh.setDamping(0.1,0.1);
@@ -506,12 +536,22 @@ function initToxicWaste(){
 			return mesh;
 		}
 
+		//ICOSAHEDRON
+		function createIcosahedron(){
+			var geometry = new THREE.IcosahedronGeomegry( 1);
+			var material = new THREE.MeshLambertMaterial( { color: 0x9f7f6d} );
+			var pmaterial = new Physijs.createMaterial(material,0.9,0.5);
+			var mesh = new Physijs.BoxMesh( geometry, material );
+			mesh.setDamping(0.1,0.1);
+			mesh.castShadow = true;
+			return mesh;
+		}
 
 			//CUBE
 		function createCube(){
 			//var geometry = new THREE.SphereGeometry( 4, 20, 20);
 			var geometry = new THREE.BoxGeometry( 1, 1, 1);
-			var material = new THREE.MeshLambertMaterial( { color: 0xffc0cb} );
+			var material = new THREE.MeshLambertMaterial( { color: 0x9ca175} );
 			var pmaterial = new Physijs.createMaterial(material,0.9,0.5);
 			var mesh = new Physijs.BoxMesh( geometry, material );
 			mesh.setDamping(0.1,0.1);
@@ -520,14 +560,17 @@ function initToxicWaste(){
 		}
 
 		//TUMBLEWEED
-		function addTumbleweed(){
+		function createTumbleweed(){
+			// var geometry = new THREE.SphereGeometry( 4, 20, 20);
 			var geometry = new THREE.CylinderGeometry( 5, 5, 20, 32);
 			var texture = new THREE.TextureLoader().load('../images/tumbleweed.png');
-			var material = new THREE.MeshLambertMaterial( { color: 0xffffff,  map: texture});
+			var material = new THREE.MeshLambertMaterial( { color: 0xffffff,  map: texture, side:THREE.DoubleSide});
+			var pmaterial = new Physijs.BoxMesh(geometry, material);
+			mesh.setDamping(0.1,0.1);
+			mesh.castShadow = true;
 			material.receiveShadow = true;
-
 			material.rotateX(Math.PI/2);
-			return material
+			return mesh;
 		}
 
 	//AUDIO FUNCTIONS
