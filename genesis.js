@@ -36,13 +36,7 @@ Team 21
 	var gameState =
 	     {litterScore:0, health:10, scene:'startscreen', camera:'startCam' }
 
-	//DISPLAY BAR
-	if (gameState.scene != 'startscreen' && gameState.scene != 'level1' ){
-		var info = document.getElementById("info");
-	 info.innerHTML='<div style="font-size:24pt">Score:  ' + gameState.score +
-	 '         Health:  ' + gameState.health + '         Litter Picked Up:  ' + gameState.litterScore +
-	  '         Time:  ' + screenClock.getElapsedTime() + '</div>' ;
-	}
+
 
   //INITIALIZE GAME
   init();
@@ -803,6 +797,15 @@ function initToxicWaste(){
 			default:
 			  console.log("don't know the scene "+gameState.scene);
 
+		}
+
+
+		//DISPLAY BAR
+		if (gameState.scene != 'startscreen' && gameState.scene != 'level1' ){
+			var info = document.getElementById("info");
+		 info.innerHTML='<div style="font-size:24pt">Score:  ' + gameState.score +
+		 '         Health:  ' + gameState.health + '         Litter Picked Up:  ' + gameState.litterScore +
+			'         Time:  ' + screenClock.getElapsedTime().seconds + '</div>' ;
 		}
 
 
