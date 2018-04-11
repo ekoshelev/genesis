@@ -11,10 +11,12 @@ Team 21
 	var scene, renderer;
 	var camera, avatarCam;
 	var avatar;
+	var aerialCam;
+	var frustumSize = 1000;
 	// var enemy;
 
 	//End Scene Variables
-	var endScene, endScene2;
+	var endScene;
 	var endCamera, endText;
 
 	//Transition Scene Variables
@@ -50,11 +52,14 @@ Team 21
 			createStartScreen();
 			scene = initScene();
 			createEndScene();
-			createEndScene2();
+			// createEndScene2();
 			initRenderer();
 			createMainScene();
 			levelOneScreen();
 			levelTwoScreen();
+			var aspect = window.innerWidth / window.innerHeight;
+			aerialCam = new THREE.OrthographicCamera( frustumSize * aspect / -2, frustumSize * aspect/2, frustumSize / -2, 1, 2000);
+			aerialCam.position.y = 100;
 	}
 
 
@@ -146,6 +151,8 @@ Team 21
 			// AVATAR CAMERA
 			avatarCam = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.1, 1000 );
 
+			// aerialCam = new THREE.OrthographicCamera(  width / - 2, width / 2, height / 2, height / - 2, near, far );
+
 			addBalls();
 			addCubes();
 			initKeyLevelOne()
@@ -180,10 +187,10 @@ Team 21
 		startCam.lookAt(0,0,0);
 	}
 
-	//Render youwon scene
+	//Render end of level 1 scene
 	function createEndScene(){
 		endScene = initScene();
-		endText = createSkyBox('youwon.png',10);
+		endText = createSkyBox('endLevel1.png',10);
 		endScene.add(endText);
 		var light1 = createPointLight();
 		light1.position.set(0,200,20);
@@ -195,18 +202,18 @@ Team 21
 	}
 
 	//Render youlose scene
-	function createEndScene2(){
-		endScene2 = initScene();
-		endText2 = createSkyBox('gameover.png', 5);
-		endScene2.add(endText2);
-		var light1 = createPointLight();
-		light1.position.set(0,200,20);
-		endScene2.add(light1);
-		endCamera = new THREE.PerspectiveCamera(90,window.innerWidth / window.innerHeight, 0.1, 1000);
-		endCamera.position.set(0,50,1);
-		endCamera.lookAt(0,0,0);
-		endScene2.addEventListener('keyup')
-	}
+	// function createEndScene2(){
+	// 	endScene2 = initScene();
+	// 	endText2 = createSkyBox('gameover.png', 5);
+	// 	endScene2.add(endText2);
+	// 	var light1 = createPointLight();
+	// 	light1.position.set(0,200,20);
+	// 	endScene2.add(light1);
+	// 	endCamera = new THREE.PerspectiveCamera(90,window.innerWidth / window.innerHeight, 0.1, 1000);
+	// 	endCamera.position.set(0,50,1);
+	// 	endCamera.lookAt(0,0,0);
+	// 	endScene2.addEventListener('keyup')
+	// }
 
 	//METHODS FOR ADDING OBJECTS TO SCENES
 
@@ -248,7 +255,7 @@ Team 21
 		var numRings = 100;
 		for (i=0;i<numRings;i++){
 			var ring = createRingMesh(1,0.5);
-			ring.position.set(randN(115)-50,20,randN(115)-50);
+			ring.position.set(randN(115)-50,20,randN(115)-40);
 			scene.add(ring);
 			// when collided with, the enemy/npc is teleported to a new location away
 			//from the avatar (like a protection object)
@@ -271,7 +278,7 @@ function addCubes(){
 	var numCubes = 30
 	for (i=0;i<numCubes;i++){
 		var cube = createCube();
-		cube.position.set(randN(115)-50,20,randN(115)-50);
+		cube.position.set(randN(115)-50,20,randN(115)-40);
 		scene.add(cube);
 		// When collided with a cube, the avatar gains a health point
 		cube.addEventListener('collision',
@@ -295,7 +302,7 @@ function addCubes(){
 		var numBalls = 20
 		for(i=0;i<numBalls;i++){
 			var ball = createBall();
-			ball.position.set(randN(115)-50,20,randN(115)-50);
+			ball.position.set(randN(115)-50,20,randN(115)-40);
 			scene.add(ball);
 			ball.addEventListener( 'collision',
 				function( other_object, relative_velocity, relative_rotation, contact_normal ) {
@@ -318,7 +325,7 @@ function addCubes(){
 		var numIco = 20
 		for(i=0;i<numIco;i++){
 			var ico = createIcosahedron();
-			ico.position.set(randN(115)-50,20,randN(115)-50);
+			ico.position.set(randN(115)-50,20,randN(115)-40);
 			scene.add(ico);
 			ico.addEventListener( 'collision',
 				function( other_object, relative_velocity, relative_rotation, contact_normal ) {
@@ -339,7 +346,7 @@ function addCubes(){
 	function addTumbleweed(){
 		for(i=0;i<10;i++){
 			var tumble = createTumbleweed();
-			tumble.position.set(randN(20)+15,30,randN(20)+15);
+			tumble.position.set(randN(100)-40,30,randN(60)-40);
 			scene.add(tumble);
 		}
 	}
@@ -348,7 +355,7 @@ function addCubes(){
 	function addToxicWaste(){
 		for(i=0;i<80;i++){
 			var tox = initToxicWaste();
-			tox.position.set(randN(115)-50,20,randN(115)-50);
+			tox.position.set(randN(115)-50,0,randN(120)-30);
 			scene.add(tox);
 			tox.addEventListener( 'collision',
 				function( other_object, relative_velocity, relative_rotation, contact_normal ) {
@@ -499,7 +506,7 @@ function initToxicWaste(){
 			key1.addEventListener('collision',
 			function( other_object, relative_velocity, relative_rotation, contact_normal ){
 				if (other_object == avatar) {
-					gameState.scene = 'level2';
+					gameState.scene = 'youwon';
 				}
 			}
 		)
@@ -684,6 +691,7 @@ function initToxicWaste(){
 			// switch cameras
 			case "1": gameState.camera = camera; break;
 			case "2": gameState.camera = avatarCam; break;
+			case "3": gameState.camera = aerialCam; break;
 
 			// move the camera around, relative to the avatar
 			case "ArrowLeft": avatarCam.translateY(1);break;
@@ -764,6 +772,13 @@ function initToxicWaste(){
 				renderer.render(startScreen, startCam);
 				break;
 
+			case "3":
+				var timer = Date.now() * 0.0001;
+				aerialCam.position.x = Math.cos(timer) * 800;
+				aerialCam.position.z = Math.sin(timer) * 800;
+				aerialCam.lookAt( scene.position );
+				renderer.render(scene, aerialCam);
+
 			case "level1":
 				scene.simulate();
 				renderer.render(levelOneScreen, startCam);
@@ -789,11 +804,11 @@ function initToxicWaste(){
 					renderer.render( scene, gameState.camera );
 				}
 				break;
-			case "youlose":
-				screenClock.stop();
-				endText.rotateY(1.005);
-				renderer.render(endScene2, endCamera);
-				break;
+			// case "youlose":
+			// 	screenClock.stop();
+			// 	endText.rotateY(1.005);
+			// 	renderer.render(endScene2, endCamera);
+			// 	break;
 
 			default:
 			  console.log("don't know the scene "+gameState.scene);
