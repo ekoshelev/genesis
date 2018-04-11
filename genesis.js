@@ -151,6 +151,7 @@ Team 21
 			initKeyLevelOne()
 			addToxicWaste();
 			avatar = createAvatar();
+			avatar.position.set(0,40,0);
 			scene.add(avatar);
 			gameState.camera = avatarCam;
 
@@ -244,10 +245,10 @@ Team 21
 
 	//ADD LITTER TYPE 1
 	function addRings(){
-		var numRings = 6;
+		var numRings = 100;
 		for (i=0;i<numRings;i++){
 			var ring = createRingMesh(1,0.5);
-			ring.position.set(randN(20)+15,30,randN(20)+15);
+			ring.position.set(randN(115)-50,20,randN(115)-50);
 			scene.add(ring);
 			// when collided with, the enemy/npc is teleported to a new location away
 			//from the avatar (like a protection object)
@@ -267,10 +268,10 @@ Team 21
 
 //ADD LITTER TYPE 2
 function addCubes(){
-	var numCubes = 3
+	var numCubes = 30
 	for (i=0;i<numCubes;i++){
 		var cube = createCube();
-		cube.position.set(randN(20)+15,30,randN(20)+15);
+		cube.position.set(randN(115)-50,20,randN(115)-50);
 		scene.add(cube);
 		// When collided with a cube, the avatar gains a health point
 		cube.addEventListener('collision',
@@ -291,10 +292,10 @@ function addCubes(){
 
 	//ADD LITTER TYPE 3
 	function addBalls(){
-		var numBalls = 2
+		var numBalls = 20
 		for(i=0;i<numBalls;i++){
 			var ball = createBall();
-			ball.position.set(randN(20)+15,30,randN(20)+15);
+			ball.position.set(randN(115)-50,20,randN(115)-50);
 			scene.add(ball);
 			ball.addEventListener( 'collision',
 				function( other_object, relative_velocity, relative_rotation, contact_normal ) {
@@ -314,10 +315,10 @@ function addCubes(){
 
 	//ADD LITTER TYPE 4
 	function addIcos(){
-		var numIco = 2
+		var numIco = 20
 		for(i=0;i<numIco;i++){
 			var ico = createIcosahedron();
-			ico.position.set(randN(20)+15,30,randN(20)+15);
+			ico.position.set(randN(115)-50,20,randN(115)-50);
 			scene.add(ico);
 			ico.addEventListener( 'collision',
 				function( other_object, relative_velocity, relative_rotation, contact_normal ) {
@@ -345,9 +346,9 @@ function addCubes(){
 
 	//ADD TOXIC WASTE TO SCENE
 	function addToxicWaste(){
-		for(i=0;i<10;i++){
+		for(i=0;i<80;i++){
 			var tox = initToxicWaste();
-			tox.position.set(randN(20)+15,30,randN(20)+15);
+			tox.position.set(randN(115)-50,20,randN(115)-50);
 			scene.add(tox);
 			tox.addEventListener( 'collision',
 				function( other_object, relative_velocity, relative_rotation, contact_normal ) {
