@@ -38,13 +38,7 @@ Team 21
 	var gameState =
 	     {litterScore:0, health:10, scene:'startscreen', camera:'startCam' }
 
-	//DISPLAY BAR
-	if (gameState.scene != 'startscreen' && gameState.scene != 'level1' ){
-		var info = document.getElementById("info");
-	 info.innerHTML='<div style="font-size:24pt">Score:  ' + gameState.score +
-	 '         Health:  ' + gameState.health + '         Litter Picked Up:  ' + gameState.litterScore +
-	  '         Time:  ' + screenClock.getElapsedTime() + '</div>' ;
-	}
+
 
   //INITIALIZE GAME
   init();
@@ -260,7 +254,7 @@ Team 21
 		var numRings = 6;
 		for (i=0;i<numRings;i++){
 			var ring = createRingMesh(1,0.5);
-			ring.position.set(randN(20)+15,30,randN(20)+15);
+			ring.position.set(randN(100)-40,30,randN(60)-40);
 			scene.add(ring);
 			// when collided with, the enemy/npc is teleported to a new location away
 			//from the avatar (like a protection object)
@@ -283,7 +277,7 @@ function addCubes(){
 	var numCubes = 3
 	for (i=0;i<numCubes;i++){
 		var cube = createCube();
-		cube.position.set(randN(20)+15,30,randN(20)+15);
+		cube.position.set(randN(100)-40,30,randN(60)-40);
 		scene.add(cube);
 		// When collided with a cube, the avatar gains a health point
 		cube.addEventListener('collision',
@@ -307,7 +301,7 @@ function addCubes(){
 		var numBalls = 2
 		for(i=0;i<numBalls;i++){
 			var ball = createBall();
-			ball.position.set(randN(20)+15,30,randN(20)+15);
+			ball.position.set(randN(100)-40,30,randN(60)-40);
 			scene.add(ball);
 			ball.addEventListener( 'collision',
 				function( other_object, relative_velocity, relative_rotation, contact_normal ) {
@@ -330,7 +324,7 @@ function addCubes(){
 		var numIco = 2
 		for(i=0;i<numIco;i++){
 			var ico = createIcosahedron();
-			ico.position.set(randN(20)+15,30,randN(20)+15);
+			ico.position.set(randN(100)-40,30,randN(60)-40);
 			scene.add(ico);
 			ico.addEventListener( 'collision',
 				function( other_object, relative_velocity, relative_rotation, contact_normal ) {
@@ -351,7 +345,7 @@ function addCubes(){
 	function addTumbleweed(){
 		for(i=0;i<10;i++){
 			var tumble = createTumbleweed();
-			tumble.position.set(randN(20)+15,30,randN(20)+15);
+			tumble.position.set(randN(100)-40,30,randN(60)-40);
 			scene.add(tumble);
 		}
 	}
@@ -359,10 +353,28 @@ function addCubes(){
 	//ADD TOXIC WASTE TO SCENE
 	function addToxicWaste(){
 		for(i=0;i<10;i++){
-			var tox = initToxicWaste();
-			tox.position.set(randN(20)+15,30,randN(20)+15);
-			scene.add(tox);
-			tox.addEventListener( 'collision',
+			var tox1 = initToxicWaste();
+			var tox2 = initToxicWaste();
+			tox1.position.set(randN(-50)+randN(100),30,randN(50)+15);
+			tox2.position.set(randN(50)+randN(-100),30,randN(-50)+15);
+			scene.add(tox1);
+			scene.add(tox2);
+
+			tox1.addEventListener( 'collision',
+				function( other_object, relative_velocity, relative_rotation, contact_normal ) {
+					if (other_object == avatar){
+						console.log("avatar hit toxic waste, health -1");
+						gameState.health -= 1;  // Score goes up by 1
+						if (gameState.health==0) {
+							gameState.scene='youlose';
+						}
+						this.position.y = this.position.y - 100;
+						this.__dirtyPosition = true;
+					}
+				}
+			)
+
+			tox2.addEventListener( 'collision',
 				function( other_object, relative_velocity, relative_rotation, contact_normal ) {
 					if (other_object == avatar){
 						console.log("avatar hit toxic waste, health -1");
@@ -818,6 +830,15 @@ function initToxicWaste(){
 			default:
 			  console.log("don't know the scene "+gameState.scene);
 
+		}
+
+
+		//DISPLAY BAR
+		if (gameState.scene != 'startscreen' && gameState.scene != 'level1' ){
+			var info = document.getElementById("info");
+		 info.innerHTML='<div style="font-size:24pt">Score:  ' + gameState.score +
+		 '         Health:  ' + gameState.health + '         Litter Picked Up:  ' + gameState.litterScore +
+			'         Time:  ' + Math.trunc(screenClock.getElapsedTime()) + '</div>' ;
 		}
 
 
