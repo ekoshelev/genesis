@@ -11,6 +11,8 @@ Team 21
 	var scene, renderer;
 	var camera, avatarCam;
 	var avatar;
+	var aerialCam;
+	var frustumSize = 1000;
 	// var enemy;
 
 	//End Scene Variables
@@ -61,6 +63,9 @@ Team 21
 			createMainScene();
 			levelOneScreen();
 			levelTwoScreen();
+			var aspect = window.innerWidth / window.innerHeight;
+			aerialCam = new THREE.OrthographicCamera( frustumSize * aspect / -2, frustumSize * aspect/2, frustumSize / -2, 1, 2000);
+			aerialCam.position.y = 100;
 	}
 
 
@@ -151,6 +156,8 @@ Team 21
 
 			// AVATAR CAMERA
 			avatarCam = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.1, 1000 );
+
+			// aerialCam = new THREE.OrthographicCamera(  width / - 2, width / 2, height / 2, height / - 2, near, far );
 
 			addBalls();
 			addCubes();
@@ -689,6 +696,7 @@ function initToxicWaste(){
 			// switch cameras
 			case "1": gameState.camera = camera; break;
 			case "2": gameState.camera = avatarCam; break;
+			case "3": gameState.camera = aerialCam; break;
 
 			// move the camera around, relative to the avatar
 			case "ArrowLeft": avatarCam.translateY(1);break;
@@ -768,6 +776,13 @@ function initToxicWaste(){
 				scene.simulate();
 				renderer.render(startScreen, startCam);
 				break;
+
+			case "3":
+				var timer = Date.now() * 0.0001;
+				aerialCam.position.x = Math.cos(timer) * 800;
+				aerialCam.position.z = Math.sin(timer) * 800;
+				aerialCam.lookAt( scene.position );
+				renderer.render(scene, aerialCam);
 
 			case "level1":
 				scene.simulate();
