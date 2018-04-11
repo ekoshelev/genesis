@@ -805,7 +805,7 @@ function initToxicWaste(){
 			var info = document.getElementById("info");
 		 info.innerHTML='<div style="font-size:24pt">Score:  ' + gameState.score +
 		 '         Health:  ' + gameState.health + '         Litter Picked Up:  ' + gameState.litterScore +
-			'         Time:  ' + screenClock.getElapsedTime().seconds + '</div>' ;
+			'         Time:  ' + Math.trunc(screenClock.getElapsedTime()) + '</div>' ;
 		}
 
 
