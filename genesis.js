@@ -109,8 +109,8 @@ Last modified 25 April 2018
 	//RENDER LEVEL 1: WASTELAND
 	function levelOneScreen(){
 		levelOneScreen = initScene();
-		var oneBackground = initPlaneMesh('startlevel1.png');	// transition screen
-		oneBackground.scale.set(250,120,1);
+		var oneBackground = initPlaneMesh('startlevel1.jpg');	// transition screen
+		oneBackground.scale.set(150,100,1);
 		oneBackground.position.set(0,0,0);
 		levelOneScreen.add(oneBackground);
 		//LIGHTS
@@ -121,8 +121,8 @@ Last modified 25 April 2018
 		levelOneScreen.add(light1);
 		levelOneScreen.add(light2);
 		//TEXT
-		initTextMesh('Level One: \nThe Wasteland', levelOneScreen, 0x8B0000);
-		console.log("added textMesh to scene");
+		// initTextMesh('Level One: \nThe Wasteland', levelOneScreen, 0x8B0000);
+		// console.log("added textMesh to scene");
 		//CAMERA
 		startCam = new THREE.PerspectiveCamera( 90, window.innerWidth / window.innerHeight, 1, 1000 );
 		startCam.position.set(0,0,50);
@@ -163,8 +163,8 @@ Last modified 25 April 2018
 		//RENDER LEVEL 2: REGENESIS
 		function levelTwoScreen(){
 			levelTwoScreen = initScene();
-			var twoBackground = initPlaneMesh('startlevel2.png');		// transition screen
-			twoBackground.scale.set(250,120,1);
+			var twoBackground = initPlaneMesh('startlevel2.jpg');		// transition screen
+			twoBackground.scale.set(150,100,1);
 			twoBackground.position.set(0,0,0);
 			levelTwoScreen.add(twoBackground);
 			//LIGHTS
@@ -175,8 +175,8 @@ Last modified 25 April 2018
 			levelTwoScreen.add(light1);
 			levelTwoScreen.add(light2);
 			//TEXT
-			initTextMesh('Level Two: \nRegenesis', levelTwoScreen, 0x336633);
-			console.log("added textMesh to scene");
+			// initTextMesh('Level Two: \nRegenesis', levelTwoScreen, 0x336633);
+			// console.log("added textMesh to scene");
 			//CAMERA
 			startCam = new THREE.PerspectiveCamera( 90, window.innerWidth / window.innerHeight, 1, 1000 );
 			startCam.position.set(0,0,50);
@@ -186,8 +186,8 @@ Last modified 25 April 2018
 		//RENDER LEVEL 3: PARADISE
 		function levelThreeScreen(){
 			levelThreeScreen = initScene();
-			var threeBackground = initPlaneMesh('startlevel3-03.png');		// transition screen
-			threeBackground.scale.set(250,120,1);
+			var threeBackground = initPlaneMesh('startlevel3.jpg');		// transition screen
+			threeBackground.scale.set(150,100,1);
 			threeBackground.position.set(0,0,0);
 			levelThreeScreen.add(threeBackground);
 			//LIGHTS
@@ -198,8 +198,8 @@ Last modified 25 April 2018
 			levelThreeScreen.add(light1);
 			levelThreeScreen.add(light2);
 			//TEXT
-			initTextMesh('Level Three: \n Paradise', levelThreeScreen, 0x336633);
-			console.log("added textMesh to scene");
+			// initTextMesh('Level Three: \n Paradise', levelThreeScreen, 0x336633);
+			// console.log("added textMesh to scene");
 			//CAMERA
 			startCam = new THREE.PerspectiveCamera( 90, window.innerWidth / window.innerHeight, 1, 1000 );
 			startCam.position.set(0,0,50);
@@ -210,7 +210,7 @@ Last modified 25 April 2018
 		function createEndScene(img){
 			endScreen = initScene();
 			var endBackground = initPlaneMesh(img);
-			endBackground.scale.set(250,120,1);
+			endBackground.scale.set(150,100,1);
 			endBackground.position.set(0,0,0);
 			endScreen.add(endBackground);
 			var light1 = createPointLight();
@@ -219,8 +219,8 @@ Last modified 25 April 2018
 			light2.position.set(-10,0,150);
 			endScreen.add(light1);
 			endScreen.add(light2);
-			initTextMesh('You won!', endScreen, 0xe5e5ff);
-			console.log("added textMesh to scene");
+			// initTextMesh('You won!', endScreen, 0xe5e5ff);
+			// console.log("added textMesh to scene");
 			endCamera = new THREE.PerspectiveCamera( 90, window.innerWidth / window.innerHeight, 0.1, 1000 );
 			endCamera.position.set(0,0,50);
 			endCamera.lookAt(0,0,0);
