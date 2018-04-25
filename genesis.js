@@ -13,8 +13,6 @@ Last modified 25 April 2018
 	var scene, renderer;
 	var camera, avatarCam;
 	var avatar;
-	var aerialCam;
-	var frustumSize = 1000;
 
 	//End Scene Variables
 	var endScreen, endCamera;
@@ -27,7 +25,6 @@ Last modified 25 April 2018
 
 	//Objects
 	var key1, key2, key3;
-	var cone;
 	var screenClock;
 
 	//Other
@@ -58,9 +55,6 @@ Last modified 25 April 2018
 			levelTwoScreen();
 			levelThreeScreen();
 			createEndScene('endLevel.jpg');
-			var aspect = window.innerWidth / window.innerHeight;
-			aerialCam = new THREE.OrthographicCamera( frustumSize * aspect / -2, frustumSize * aspect/2, frustumSize / -2, 1, 2000);
-			aerialCam.position.y = 100;
 	}
 
 
@@ -714,7 +708,6 @@ Last modified 25 April 2018
 			// switch cameras
 			case "1": gameState.camera = camera; break;
 			case "2": gameState.camera = avatarCam; break;
-			case "3": gameState.camera = aerialCam; break;
 
 			// move the camera around, relative to the avatar
 			case "ArrowLeft": avatarCam.translateY(1);break;
@@ -790,12 +783,6 @@ Last modified 25 April 2018
 				scene.simulate();
 				renderer.render(startScreen, startCam);
 				break;
-			case "3":
-				var timer = Date.now() * 0.0001;
-				aerialCam.position.x = Math.cos(timer) * 800;
-				aerialCam.position.z = Math.sin(timer) * 800;
-				aerialCam.lookAt( scene.position );
-				renderer.render(scene, aerialCam);
 			case "level1":
 				scene.simulate();
 				renderer.render(levelOneScreen, startCam);
