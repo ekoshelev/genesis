@@ -87,9 +87,9 @@ Last modified 25 April 2018
 	//RENDER START SCREEN
 	function createStartScreen(){
 		startScreen = initScene();
-		startText = initPlaneMesh('startscreen.png');
+		startText = initPlaneMesh('startscreen.jpg');
 		startScreen.add(startText);
-		startText.scale.set(250,120,1);
+		startText.scale.set(150,100,1);
 		startText.position.set(0,0,0);
 		startScreen.add(startText);
 		//LIGHTS
