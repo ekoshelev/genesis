@@ -17,8 +17,7 @@ Last modified 25 April 2018
 	var frustumSize = 1000;
 
 	//End Scene Variables
-	var endScene;
-	var endCamera, endText;
+	var endScreen, endCamera;
 
 	//Transition Scene Variables
 	var textGeometry;
@@ -53,12 +52,12 @@ Last modified 25 April 2018
       initPhysijs();
 			createStartScreen();
 			scene = initScene();
-			createEndScene('endLevel.png');
 			initRenderer();
 			createMainScene();
 			levelOneScreen();
 			levelTwoScreen();
 			levelThreeScreen();
+			createEndScene('endLevel.jpg');
 			var aspect = window.innerWidth / window.innerHeight;
 			aerialCam = new THREE.OrthographicCamera( frustumSize * aspect / -2, frustumSize * aspect/2, frustumSize / -2, 1, 2000);
 			aerialCam.position.y = 100;
@@ -213,18 +212,23 @@ Last modified 25 April 2018
 			startCam.lookAt(0,0,0);
 		}
 
-
 		//RENDER END OF LEVEL SCREEN
 		function createEndScene(img){
 			endScreen = initScene();
-			endText = createSkyBox(img,10);
-			endScreen.add(endText);
-			initTextMesh('You won!', endScreen, 0x336633);
+			var endBackground = initPlaneMesh(img);
+			endBackground.scale.set(250,120,1);
+			endBackground.position.set(0,0,0);
+			endScreen.add(endBackground);
 			var light1 = createPointLight();
-			light1.position.set(0,200,20);
+			var light2 = createPointLight();
+			light1.position.set(10,0,150);
+			light2.position.set(-10,0,150);
 			endScreen.add(light1);
+			endScreen.add(light2);
+			initTextMesh('You won!', endScreen, 0xe5e5ff);
+			console.log("added textMesh to scene");
 			endCamera = new THREE.PerspectiveCamera( 90, window.innerWidth / window.innerHeight, 0.1, 1000 );
-			endCamera.position.set(0,50,1);
+			endCamera.position.set(0,0,50);
 			endCamera.lookAt(0,0,0);
 		}
 
@@ -689,7 +693,7 @@ Last modified 25 April 2018
 			initKeyLevelThree();
 			return;
 		}else if (gameState.scene == 'youwon') {
-			createEndScene();
+			createEndScene('endLevel.jpg');
 			return;
 		}
 
