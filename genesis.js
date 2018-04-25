@@ -2,6 +2,8 @@
 /*
 Final Project
 Team 21
+
+Last modified 25 April 2018
 */
 
 	//Start Screen Variables
@@ -22,9 +24,10 @@ Team 21
 	var textGeometry;
 	var levelOneScreen;
 	var levelTwoScreen;
+	var levelThreeScreen;
 
 	//Objects
-	var key1;
+	var key1, key2, key3;
 	var cone;
 	var screenClock;
 
@@ -38,25 +41,29 @@ Team 21
 	var gameState =
 	     {litterScore:0, health:10, scene:'startscreen', camera:'startCam' }
 
+
   //INITIALIZE GAME
   init();
 	initControls();
 	animate();
+
 
 	//Init Functions
 	function init(){ // Initialize Game
       initPhysijs();
 			createStartScreen();
 			scene = initScene();
-			createEndScene();
+			createEndScene('endLevel.png');
 			initRenderer();
 			createMainScene();
 			levelOneScreen();
 			levelTwoScreen();
+			levelThreeScreen();
 			var aspect = window.innerWidth / window.innerHeight;
 			aerialCam = new THREE.OrthographicCamera( frustumSize * aspect / -2, frustumSize * aspect/2, frustumSize / -2, 1, 2000);
 			aerialCam.position.y = 100;
 	}
+
 
 	// Initialize new Physijs scene
 	function initScene(){
@@ -64,11 +71,13 @@ Team 21
 		return scene;
 	}
 
+
 	//Initialize Physijs
 	function initPhysijs(){
 		Physijs.scripts.worker = '/js/physijs_worker.js';
 		Physijs.scripts.ammo = '/js/ammo.js';
 	}
+
 
 	// Initialize renderer
 	function initRenderer(){
@@ -78,6 +87,7 @@ Team 21
 		renderer.shadowMap.enabled = true;
 		renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 	}
+
 
 	//FUNCTIONS FOR RENDERING SCENES:
 
@@ -102,6 +112,7 @@ Team 21
 		startCam.lookAt(0,0,0);
 	}
 
+
 	//RENDER LEVEL 1: WASTELAND
 	function levelOneScreen(){
 		levelOneScreen = initScene();
@@ -125,6 +136,7 @@ Team 21
 		startCam.lookAt(0,0,0);
 	}
 
+
 	//Render main scene
 	function createMainScene(){
       // LIGHTING
@@ -147,13 +159,13 @@ Team 21
 			// ADD OBJECTS
 			addBalls(20);
 			addCubes(30);
-			initKeyLevelOne()
 			addToxicWaste(80);
 			avatar = createAvatar();
 			avatar.position.set(0,40,0);
 			scene.add(avatar);
 			gameState.camera = avatarCam;
 	}
+
 
 		//RENDER LEVEL 2: REGENESIS
 		function levelTwoScreen(){
@@ -178,18 +190,44 @@ Team 21
 			startCam.lookAt(0,0,0);
 		}
 
-		//RENDER END OF LEVEL 1 SCREEN
-		function createEndScene(){
-			endScene = initScene();
-			endText = createSkyBox('endLevel1.png',10);
-			endScene.add(endText);
+		//RENDER LEVEL 3: PARADISE
+		function levelThreeScreen(){
+			levelThreeScreen = initScene();
+			var threeBackground = initPlaneMesh('startlevel3-03.png');		// transition screen
+			threeBackground.scale.set(250,120,1);
+			threeBackground.position.set(0,0,0);
+			levelThreeScreen.add(threeBackground);
+			//LIGHTS
+			var light1 = createPointLight();
+			var light2 = createPointLight();
+			light1.position.set(10,0,150);
+			light2.position.set(-10,0,150);
+			levelThreeScreen.add(light1);
+			levelThreeScreen.add(light2);
+			//TEXT
+			initTextMesh('Level Three: \n Paradise', levelThreeScreen, 0x336633);
+			console.log("added textMesh to scene");
+			//CAMERA
+			startCam = new THREE.PerspectiveCamera( 90, window.innerWidth / window.innerHeight, 1, 1000 );
+			startCam.position.set(0,0,50);
+			startCam.lookAt(0,0,0);
+		}
+
+
+		//RENDER END OF LEVEL SCREEN
+		function createEndScene(img){
+			endScreen = initScene();
+			endText = createSkyBox(img,10);
+			endScreen.add(endText);
+			initTextMesh('You won!', endScreen, 0x336633);
 			var light1 = createPointLight();
 			light1.position.set(0,200,20);
-			endScene.add(light1);
+			endScreen.add(light1);
 			endCamera = new THREE.PerspectiveCamera( 90, window.innerWidth / window.innerHeight, 0.1, 1000 );
 			endCamera.position.set(0,50,1);
 			endCamera.lookAt(0,0,0);
 		}
+
 
 		//METHODS FOR ADDING OBJECTS TO SCENES
 
@@ -246,6 +284,7 @@ Team 21
 			}
 		}
 
+
 		//ADD LITTER, TYPE 2
 		function addCubes(numCubes){
 			for (i=0;i<numCubes;i++){
@@ -269,6 +308,7 @@ Team 21
 			}
 		}
 
+
 		//ADD LITTER, TYPE 3
 		function addBalls(numBalls){
 			for(i=0;i<numBalls;i++){
@@ -291,6 +331,7 @@ Team 21
 			}
 		}
 
+
 		//ADD LITTER, TYPE 4 -- NEVER USED
 		function addIcos(numIco){ // specify the number of litter, type 4 to add to scene
 			for(i=0;i<numIco;i++){
@@ -311,6 +352,7 @@ Team 21
 				)
 			}
 		}
+
 
 		//ADD TOXIC WASTE TO SCENE
 		function addToxicWaste(quantity){
@@ -334,6 +376,7 @@ Team 21
 			}
 		}
 
+
 		//HELPER/INITIALIZATION METHODS
 
 		//TOXIC WASTE
@@ -347,6 +390,7 @@ Team 21
 			return toxMesh;
 		}
 
+
 		//PLANE
 		function initPlaneMesh(image){
 				var geometry = new THREE.PlaneGeometry( 1, 1, 128);
@@ -356,6 +400,7 @@ Team 21
 				planeMesh.receiveShadow = true;
 				return planeMesh;
 			}
+
 
 		//POINTLIGHT
 		function createPointLight(){
@@ -370,6 +415,7 @@ Team 21
 			return light;
 		}
 
+
 		//BOX
 		function createBoxMesh(color){
 			var geometry = new THREE.BoxGeometry(1, 1, 1);
@@ -378,6 +424,7 @@ Team 21
 			mesh.castShadow = true;
 			return mesh;
 		}
+
 
 		//GROUND
 		function createGround(image){
@@ -409,6 +456,7 @@ Team 21
 			return mesh
 		}
 
+
 		//AVATAR
 		function createAvatar(){
 			var geometry = new THREE.OctahedronGeometry(3, 0);
@@ -423,6 +471,7 @@ Team 21
 			mesh.add(avatarCam);
 			return mesh;
 		}
+
 
 		//KEY: LEVEL ONE
 		function initKeyLevelOne(){
@@ -441,6 +490,40 @@ Team 21
 
 			scene.add(key1);
 	}
+
+			function initKeyLevelTwo(){
+				var geometry = new THREE.DodecahedronGeometry(0.5,0);
+				var material = new THREE.MeshLambertMaterial( { color: 0x009999 } );
+				var pmaterial = new Physijs.createMaterial(material,0.9,0.5);
+				key2 = new Physijs.BoxMesh( geometry, pmaterial, 0 )
+				key2.position.set(20,2,20);
+				key2.addEventListener('collision',
+				function( other_object, relative_velocity, relative_rotation, contact_normal ){
+					if (other_object == avatar) {
+						gameState.scene = 'level3';
+					}
+				}
+			)
+
+				scene.add(key2);
+		}
+
+			function initKeyLevelThree(){
+				var geometry = new THREE.DodecahedronGeometry(0.5,0);
+				var material = new THREE.MeshLambertMaterial( { color: 0x009999 } );
+				var pmaterial = new Physijs.createMaterial(material,0.9,0.5);
+				key3 = new Physijs.BoxMesh( geometry, pmaterial, 0 )
+				key3.position.set(20,2,20);
+				key3.addEventListener('collision',
+				function( other_object, relative_velocity, relative_rotation, contact_normal ){
+					if (other_object == avatar) {
+						gameState.scene = 'youwon';
+					}
+				}
+			)
+
+				scene.add(key3);
+		}
 
 		//RING
 		function createRingMesh(r, t){
@@ -465,6 +548,7 @@ Team 21
 			return mesh;
 		}
 
+
 		//ICOSAHEDRON
 		function createIcosahedron(){
 			var geometry = new THREE.IcosahedronGeomegry( 1);
@@ -475,6 +559,7 @@ Team 21
 			mesh.castShadow = true;
 			return mesh;
 		}
+
 
 		//CUBE
 		function createCube(){
@@ -487,6 +572,7 @@ Team 21
 			mesh.castShadow = true;
 			return mesh;
 		}
+
 
 	//AUDIO FUNCTIONS
 
@@ -509,6 +595,7 @@ Team 21
 		});
 	}
 
+
 	//SOUND EFFECTS
 	function soundEffect(file){
 		// Create an AudioListener and add it to the camera
@@ -527,6 +614,7 @@ Team 21
 			sound.play();
 		});
 	}
+
 
 	//OTHER METHODS
 
@@ -576,6 +664,32 @@ Team 21
 			addBalls(20);
 			addCubes(30);
 			addRings(100);
+			initKeyLevelOne();
+			return;
+		}else if (gameState.scene == 'level2' && event.key=='p') {
+			createClock();
+			screenClock.start();
+			gameState.scene = 'main';
+			gameState.score = 0;
+			gameState.health = 10;
+			addBalls(20);
+			addCubes(30);
+			addRings(100);
+			initKeyLevelTwo();
+			return;
+		}else if (gameState.scene == 'level3' && event.key=='p') {
+			createClock();
+			screenClock.start();
+			gameState.scene = 'main';
+			gameState.score = 0;
+			gameState.health = 10;
+			addBalls(20);
+			addCubes(30);
+			addRings(100);
+			initKeyLevelThree();
+			return;
+		}else if (gameState.scene == 'youwon') {
+			createEndScene();
 			return;
 		}
 
@@ -686,10 +800,13 @@ Team 21
 				scene.simulate();
 				renderer.render(levelTwoScreen, startCam);
 				break;
+			case "level3":
+				scene.simulate();
+				renderer.render(levelThreeScreen, startCam);
+				break;
 			case "youwon":
-				screenClock.stop();
-				endText.rotateY(0.005);
-				renderer.render( endScene, endCamera );
+				scene.simulate()
+				renderer.render( endScreen, endCamera );
 				break;
 			case "main":
 				updateAvatar();
