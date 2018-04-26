@@ -548,7 +548,6 @@ Last modified 25 April 2018
 					}
 				}
 			)
-				scene.add(key2);
 		}
 
 			function initKeyLevelThree(){
@@ -567,8 +566,6 @@ Last modified 25 April 2018
 					}
 				}
 			)
-
-				scene.add(key3);
 		}
 
 		//RING
