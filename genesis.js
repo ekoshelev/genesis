@@ -662,6 +662,7 @@ Last modified 25 April 2018
 			return;
 		}else if (gameState.scene == 'startscreen' && event.key=='p') {
 			gameState.scene = 'level1';
+			playGameMusic('Ossuary.wav')
 			return;
 		}else if (gameState.scene == 'level1' && event.key=='p') {
 			createClock();
@@ -670,7 +671,6 @@ Last modified 25 April 2018
 			gameState.level = 'one'
 			gameState.score = 0;
 			gameState.health = 10;
-			playGameMusic('Ossuary.wav')
 			addBalls(20);
 			addCubes(30);
 			addRings(100);
@@ -815,7 +815,8 @@ Last modified 25 April 2018
 				renderer.render(levelOneScreen, startCam);
 				break;
 			case "level2":
-				globalSound.stop()
+				//globalSound.stop()
+				playGameMusic('LightMood.mp3')
 				scene.simulate();
 				renderer.render(levelTwoScreen, startCam);
 				break;
