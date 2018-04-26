@@ -26,6 +26,7 @@ Last modified 25 April 2018
 	//Objects
 	var key1, key2, key3;
 	var screenClock;
+	var ground, skybox;
 
 	//Other
 	var controls =
@@ -143,10 +144,10 @@ Last modified 25 April 2018
 			camera.position.set(0,50,0);
 			camera.lookAt(0,0,0);
 			// CREATE GROUND/SKYBOX
-			var ground = createGround('wasteldgrnd.jpg');
-			scene.add(ground);
-			var skybox = createSkyBox('wasteland.jpg',1);
-			scene.add(skybox);
+			// ground = createGround('wasteldgrnd.jpg');
+			// scene.add(ground);
+			// skybox = createSkyBox('wasteland.jpg',1);
+			// scene.add(skybox);
 			// AVATAR CAMERA
 			avatarCam = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.1, 1000 );
 			// ADD OBJECTS
@@ -637,7 +638,7 @@ Last modified 25 April 2018
 	//KEYDOWN EVENTS
 	function keydown(event){
 		console.log("Keydown:"+event.key);
-		//console.dir(event);\
+		//console.dir(event);
 
 		// first we handle the "play again" key in the "youwon" scene
 		if ((gameState.scene == 'youwon' && event.key=='r') ||
@@ -662,28 +663,40 @@ Last modified 25 April 2018
 			addBalls(20);
 			addCubes(30);
 			addRings(100);
+			ground = createGround('wasteldgrnd.jpg');
+			scene.add(ground);
+			skybox = createSkyBox('wasteland.jpg',1);
+			scene.add(skybox);
 			initKeyLevelOne();
 			return;
 		}else if (gameState.scene == 'level2' && event.key=='p') {
-			createClock();
-			screenClock.start();
+			// createClock();
+			// screenClock.start();
 			gameState.scene = 'main';
-			gameState.score = 0;
-			gameState.health = 10;
+			// gameState.score = 0;
+			// gameState.health = 10;
 			addBalls(20);
 			addCubes(30);
 			addRings(100);
+			ground = createGround('grass.jpeg');
+			scene.add(ground);
+			skybox = createSkyBox('sky.jpg',1);
+			scene.add(skybox);
 			initKeyLevelTwo();
 			return;
 		}else if (gameState.scene == 'level3' && event.key=='p') {
-			createClock();
-			screenClock.start();
+			// createClock();
+			// screenClock.start();
 			gameState.scene = 'main';
-			gameState.score = 0;
-			gameState.health = 10;
+			// gameState.score = 0;
+			// gameState.health = 10;
 			addBalls(20);
 			addCubes(30);
 			addRings(100);
+			ground = createGround('flowers.jpg');
+			scene.add(ground);
+			skybox = createSkyBox('clouds.jpg',1);
+			scene.add(skybox);
 			initKeyLevelThree();
 			return;
 		}else if (gameState.scene == 'youwon') {
