@@ -617,11 +617,7 @@ Last modified 25 April 2018
 				var material = new THREE.MeshLambertMaterial( { color: 0x009999 } );
 				var pmaterial = new Physijs.createMaterial(material,0.9,0.5);
 				key3 = new Physijs.BoxMesh( geometry, pmaterial, 0 )
-<<<<<<< HEAD
 				key3.position.set(randN(115)-50,2,randN(115)-40);
-=======
-				key3.position.set(30,2,20);
->>>>>>> Hints
 				key3.addEventListener('collision',
 				function( other_object, relative_velocity, relative_rotation, contact_normal ){
 					if (other_object == avatar) {
