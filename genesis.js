@@ -167,6 +167,7 @@ Last modified 25 April 2018
 			// ADD OBJECTS
 			addCrumpledPaper(20);
 			addCubes(30);
+			addCoke(30);
 			addToxicWaste(80);
 			avatar = createAvatar();
 			avatar.position.set(-25,15,-60);
@@ -1019,6 +1020,7 @@ Last modified 25 April 2018
 			addCrumpledPaper(20);
 			addCubes(30);
 			addCoke(100);
+			addToxicWaste(80);
 			addRocks(10);
 			ground = createGround('wasteldgrnd.jpg');
 			scene.add(ground);
@@ -1037,6 +1039,7 @@ Last modified 25 April 2018
 			addCrumpledPaper(10);
 			addCubes(15);
 			addCoke(30);
+			addToxicWaste(80);
 			addTrees(30);
 			ground = createGround('grass.jpeg');
 			scene.add(ground);
@@ -1053,7 +1056,8 @@ Last modified 25 April 2018
 			// gameState.health = 10;
 			addCrumpledPaper(10);
 			addCubes(15);
-			addCoke(30);
+			addCoke(10);
+			addToxicWaste(10);
 			addFlowers(50);
 			ground = createGround('flowers.jpg');
 			scene.add(ground);
