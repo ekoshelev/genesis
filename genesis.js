@@ -34,9 +34,11 @@ Last modified 25 April 2018
 				speed:10, fly:false, reset:false,
 		    camera:camera}
 
+	var globalSound;
+
 	// initial game state
 	var gameState =
-	     {litterScore:0, health:10, scene:'startscreen', camera:'startCam' }
+	     {litterScore:0, health:10, scene:'startscreen', camera:'startCam', level: 'none'}
 
 
   //INITIALIZE GAME
@@ -158,6 +160,12 @@ Last modified 25 April 2018
 			avatar.position.set(0,40,0);
 			scene.add(avatar);
 			gameState.camera = avatarCam;
+			//ADD MUSIC
+			if (gameState.level == 'one'){
+				console.log('playing game music')
+				playGameMusic('Ossuary.wav')
+			}
+
 	}
 
 
@@ -576,21 +584,22 @@ Last modified 25 April 2018
 	//AUDIO FUNCTIONS
 
 	//MUSIC
-	function playGameMusic(){
+	function playGameMusic(file){
 		// Create an AudioListener and add it to the camera
-		var listener = new THREE.AudioListener();
+	  var listener = new THREE.AudioListener();
 		camera.add( listener );
 
 		// Create a global audio source
-		var sound = new THREE.Audio( listener );
+		globalSound = new THREE.Audio( listener );
 
 		// Load a sound and set it as the Audio object's buffer
 		var audioLoader = new THREE.AudioLoader();
-		audioLoader.load( '/sounds/loop.mp3', function( buffer ) {
-			sound.setBuffer( buffer );
-			sound.setLoop( true );
-			sound.setVolume( 0.05 );
-			sound.play();
+		audioLoader.load( '/sounds/'+ file, function( buffer ) {
+			globalSound.setBuffer( buffer );
+			globalSound.setLoop( true );
+			globalSound.setVolume( 0.05 );
+			globalSound.play();
+
 		});
 	}
 
@@ -653,11 +662,13 @@ Last modified 25 April 2018
 			return;
 		}else if (gameState.scene == 'startscreen' && event.key=='p') {
 			gameState.scene = 'level1';
+			playGameMusic('Ossuary.wav')
 			return;
 		}else if (gameState.scene == 'level1' && event.key=='p') {
 			createClock();
 			screenClock.start();
 			gameState.scene = 'main';
+			gameState.level = 'one'
 			gameState.score = 0;
 			gameState.health = 10;
 			addBalls(20);
@@ -673,6 +684,7 @@ Last modified 25 April 2018
 			// createClock();
 			// screenClock.start();
 			gameState.scene = 'main';
+			gameState.level = 'two'
 			// gameState.score = 0;
 			// gameState.health = 10;
 			addBalls(10);
@@ -688,6 +700,7 @@ Last modified 25 April 2018
 			// createClock();
 			// screenClock.start();
 			gameState.scene = 'main';
+			gameState.level = 'three'
 			// gameState.score = 0;
 			// gameState.health = 10;
 			addBalls(10);
@@ -802,6 +815,8 @@ Last modified 25 April 2018
 				renderer.render(levelOneScreen, startCam);
 				break;
 			case "level2":
+				//globalSound.stop()
+				playGameMusic('LightMood.mp3')
 				scene.simulate();
 				renderer.render(levelTwoScreen, startCam);
 				break;
