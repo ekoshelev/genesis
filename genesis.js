@@ -700,6 +700,7 @@ Last modified 25 April 2018
 			initKeyLevelThree();
 			return;
 		}else if (gameState.scene == 'youwon') {
+			screenClock.stop();
 			createEndScene('endLevel.jpg');
 			return;
 		}
