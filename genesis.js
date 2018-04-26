@@ -675,9 +675,9 @@ Last modified 25 April 2018
 			gameState.scene = 'main';
 			// gameState.score = 0;
 			// gameState.health = 10;
-			addBalls(20);
-			addCubes(30);
-			addRings(100);
+			addBalls(10);
+			addCubes(15);
+			addRings(30);
 			ground = createGround('grass.jpeg');
 			scene.add(ground);
 			skybox = createSkyBox('sky.jpg',1);
@@ -690,9 +690,9 @@ Last modified 25 April 2018
 			gameState.scene = 'main';
 			// gameState.score = 0;
 			// gameState.health = 10;
-			addBalls(20);
-			addCubes(30);
-			addRings(100);
+			addBalls(10);
+			addCubes(15);
+			addRings(30);
 			ground = createGround('flowers.jpg');
 			scene.add(ground);
 			skybox = createSkyBox('clouds.jpg',1);
