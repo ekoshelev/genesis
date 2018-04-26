@@ -8,7 +8,7 @@ Last modified 25 April 2018
 
 	//Start Screen Variables
 	var startScreen, startCam;
-
+	var allrocks;
 	//Main Scene Variables
 	var scene, renderer;
 	var camera, avatarCam;
@@ -360,16 +360,26 @@ Last modified 25 April 2018
 		}
 		//ADD ROCKS
 		function addRocks(numRocks){
+			allrocks=[];
 			for(i=0;i<numRocks;i++){
 				var rock = initRock(1);
 				rock.position.set(randN(115)-50,0,randN(115)-40);
 				scene.add(rock);
+				allrocks.push(rock);
 				var rock = initRock(2);
 				rock.position.set(randN(115)-50,0,randN(115)-40);
 				scene.add(rock);
+				allrocks.push(rock);
 				var rock = initRock(3);
 				rock.position.set(randN(115)-50,0,randN(115)-40);
 				scene.add(rock);
+				allrocks.push(rock);
+			}
+		}
+
+		function removeRocks(){
+			for(i=0;i<allrocks.size;i++){
+				scene.remove(allrocks[i]);
 			}
 		}
 			//ADD FLOWERS
@@ -1009,7 +1019,7 @@ Last modified 25 April 2018
 			addCrumpledPaper(20);
 			addCubes(30);
 			addCoke(100);
-			addRocks(30);
+			addRocks(10);
 			ground = createGround('wasteldgrnd.jpg');
 			scene.add(ground);
 			skybox = createSkyBox('wasteland.jpg',1);
@@ -1019,6 +1029,7 @@ Last modified 25 April 2018
 		}else if (gameState.scene == 'level2' && event.key=='p') {
 			// createClock();
 			// screenClock.start();
+			removeRocks();
 			gameState.scene = 'main';
 			gameState.level = 'two'
 			gameState.litterscore = 0;
