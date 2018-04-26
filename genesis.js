@@ -284,6 +284,9 @@ Last modified 25 April 2018
 						//Get rid of coke can once collision  occurs
 						this.position.y = this.position.y - 100;
 						this.__dirtyPosition = true;
+						if (gameState.litterScore==10) {
+							addKey();
+						}
 					}
 				})
 			}
@@ -306,7 +309,9 @@ Last modified 25 April 2018
 							// Get rid of the cube once collision occurs
 							this.position.y = this.position.y - 100;
 							this.__dirtyPosition = true;
-
+							if (gameState.litterScore==10) {
+								addKey();
+							}
 						}
 					}
 				)
@@ -329,6 +334,9 @@ Last modified 25 April 2018
 							// Make the paper drop below the scene
 							this.position.y = this.position.y - 100;
 							this.__dirtyPosition = true;
+							if (gameState.litterScore==10) {
+								addKey();
+							}
 						}
 					}
 				)
@@ -382,6 +390,24 @@ Last modified 25 April 2018
 
 
 		//HELPER/INITIALIZATION METHODS
+
+		//ADD CORRECT KEY TO SCENE
+		function addKey(){
+			switch (gameState.level) {
+				case "one":
+					scene.add(key1)
+					console.log("added level 1 key");
+					break;
+				case 'two':
+					scene.add(key2)
+					console.log("added level 2 key");
+					break;
+				case 'three':
+					scene.add(key3)
+					console.log("added level 3 key");
+					break;
+			}
+		}
 
 		//TOXIC WASTE
 		function initToxicWaste(){
@@ -493,16 +519,19 @@ Last modified 25 April 2018
 			var material = new THREE.MeshLambertMaterial( { color: 0x009999 } );
 			var pmaterial = new Physijs.createMaterial(material,0.9,0.5);
 			key1 = new Physijs.BoxMesh( geometry, pmaterial, 0 )
-			key1.position.set(20,2,20);
+			key1.position.set(randN(115)-50,2,randN(115)-40);
 			key1.addEventListener('collision',
 			function( other_object, relative_velocity, relative_rotation, contact_normal ){
 				if (other_object == avatar) {
+					this.position.y = this.position.y - 100;
+					this.__dirtyPosition = true;
+					gameState.litterScore = 0;
 					gameState.scene = 'level2';
 				}
 			}
 		)
 
-			scene.add(key1);
+			//scene.add(key1);
 	}
 
 			function initKeyLevelTwo(){
@@ -510,10 +539,13 @@ Last modified 25 April 2018
 				var material = new THREE.MeshLambertMaterial( { color: 0x009999 } );
 				var pmaterial = new Physijs.createMaterial(material,0.9,0.5);
 				key2 = new Physijs.BoxMesh( geometry, pmaterial, 0 )
-				key2.position.set(20,2,20);
+				key2.position.set(randN(115)-50,2,randN(115)-40);
 				key2.addEventListener('collision',
 				function( other_object, relative_velocity, relative_rotation, contact_normal ){
 					if (other_object == avatar) {
+						this.position.y = this.position.y - 100;
+						this.__dirtyPosition = true;
+						gameState.litterScore = 0;
 						gameState.scene = 'level3';
 					}
 				}
@@ -527,10 +559,13 @@ Last modified 25 April 2018
 				var material = new THREE.MeshLambertMaterial( { color: 0x009999 } );
 				var pmaterial = new Physijs.createMaterial(material,0.9,0.5);
 				key3 = new Physijs.BoxMesh( geometry, pmaterial, 0 )
-				key3.position.set(20,2,20);
+				key3.position.set(randN(115)-50,2,randN(115)-40);
 				key3.addEventListener('collision',
 				function( other_object, relative_velocity, relative_rotation, contact_normal ){
 					if (other_object == avatar) {
+						this.position.y = this.position.y - 100;
+						this.__dirtyPosition = true;
+						gameState.litterScore = 0;
 						gameState.scene = 'youwon';
 					}
 				}
@@ -669,7 +704,7 @@ Last modified 25 April 2018
 		if ((gameState.scene == 'youwon' && event.key=='r') ||
 				(gameState.scene == 'youlose' && event.key=='r')) {
 			gameState.scene = 'main';
-			gameState.score = 0;
+			gameState.litterscore = 0;
 			gameState.health = 10;
 			enemy.position.set(randN(20),30,randN(20));
 			addCrumpledPaper(20);
@@ -685,7 +720,7 @@ Last modified 25 April 2018
 			screenClock.start();
 			gameState.scene = 'main';
 			gameState.level = 'one'
-			gameState.score = 0;
+			gameState.litterscore = 0;
 			gameState.health = 10;
 			addCrumpledPaper(20);
 			addCubes(30);
@@ -701,7 +736,7 @@ Last modified 25 April 2018
 			// screenClock.start();
 			gameState.scene = 'main';
 			gameState.level = 'two'
-			// gameState.score = 0;
+			gameState.litterscore = 0;
 			// gameState.health = 10;
 			addCrumpledPaper(10);
 			addCubes(15);
@@ -717,7 +752,7 @@ Last modified 25 April 2018
 			// screenClock.start();
 			gameState.scene = 'main';
 			gameState.level = 'three'
-			// gameState.score = 0;
+			gameState.litterscore = 0;
 			// gameState.health = 10;
 			addCrumpledPaper(10);
 			addCubes(15);
@@ -761,7 +796,10 @@ Last modified 25 April 2018
 			// rotate avatar camera view to the left and right
 			case "q": avatarCam.rotateY(45); break;	// to the left
 			case "e": avatarCam.rotateY(-45); break;	// to the right
-			case "r": avatar.rotation.set(0,0,0); avatar.__dirtyRotation=true;
+			case "r": avatar.rotation.set(0,0,0);
+								avatar.__dirtyRotation=true;
+								avatar.setAngularVelocity(new THREE.Vector3(0,0,0))
+								break;
 		}
 
 	}
