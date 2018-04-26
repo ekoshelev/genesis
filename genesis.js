@@ -36,6 +36,9 @@ Last modified 25 April 2018
 
 	var globalSound;
 
+	var hint1, hint2, hint3;
+
+
 	// initial game state
 	var gameState =
 	     {litterScore:0, health:10, scene:'startscreen', camera:'startCam', level: 'none'}
@@ -130,7 +133,16 @@ Last modified 25 April 2018
 		startCam = new THREE.PerspectiveCamera( 90, window.innerWidth / window.innerHeight, 1, 1000 );
 		startCam.position.set(0,0,50);
 		startCam.lookAt(0,0,0);
+		//HINT
+		var infoUp = document.getElementById("infoUp");
+		infoUp.style.display = 'none';
+		 infoUp.innerHTML=
+			'<div style="font-size:12pt">Welcome to the wasteland. After years of ' +
+			'exploitation, misuse, and abuse by humankind, the planet and it\'s resources ' +
+			'are in a state of total devastation. But there is hope! Perhaps if you spent some '+
+			'time cleaning up all of the pollution, you may have a chance to reverse the damage...';
 	}
+
 
 
 	//Render main scene
@@ -460,6 +472,15 @@ Last modified 25 April 2018
 			return mesh;
 		}
 
+		//static box
+		function createBoxMesh2(color){
+			var geometry = new THREE.BoxGeometry(1, 1, 1);
+			var material = new THREE.MeshLambertMaterial( {color: color} );
+			mesh = new Physijs.BoxMesh( geometry, material,0);
+			mesh.castShadow = true;
+			return mesh;
+		}
+
 
 		//GROUND
 		function createGround(image){
@@ -524,6 +545,26 @@ Last modified 25 April 2018
 					gameState.scene = 'level2';
 					globalSound.stop();
 					playGameMusic('LightMood.mp3');
+					infoUp.style.display = 'none';
+					 infoUp.innerHTML=
+						'<div style="font-size:12pt">Things are looking up, but we still have more work ' +
+						'to do. As you can see, it is much easier to destroy an environment than to ' +
+						'rebuild one. But despite all of this, the planet is incredibly resilient! '+
+						'Continue cleaning up the litter and maybe this planet can really be saved...';
+						hint2 = createBoxMesh2(0x00ff00);
+						hint2.position.set(25,5,0)
+						hint2.scale.set(2,2,2)
+						hint2.addEventListener( 'collision',
+							function( other_object, relative_velocity, relative_rotation, contact_normal ) {
+								if (other_object == avatar){
+									console.log('User found hint #2');
+									infoUp.style.display = 'block';
+							}
+						}
+						)
+						scene.add(hint2);
+						hint1.position.set(0,-100,0);
+						hint1.__dirtyPosition = true;
 				}
 			}
 		)
@@ -545,8 +586,29 @@ Last modified 25 April 2018
 						gameState.litterScore = 0;
 						gameState.scene = 'level3';
 						playGameMusic('AllFallDown.mp3')
+						infoUp.style.display = 'none';
+						 infoUp.innerHTML =
+							'<div style="font-size:12pt">Looking good! It is amazing how far a little  ' +
+							'kindness to the planet can go. But this is not the end; the real work ahead ' +
+							'depends on everyone\'s (including you) willingness to make environmentally-conscious decisions in '+
+							'their lifestyles. As you continue on collecting the last pieces of pollution, ' +
+							'please think about what you can do in real life to save the planet.';
+							hint3 = createBoxMesh2(0x00ff00);
+							hint3.position.set(0,5,25)
+							hint3.scale.set(2,2,2)
+							hint3.addEventListener( 'collision',
+								function( other_object, relative_velocity, relative_rotation, contact_normal ) {
+									if (other_object == avatar){
+										console.log('User found hint #3');
+										infoUp.style.display = 'block';
+								}
+							}
+							)
+							scene.add(hint3);
+
 					}
-				}
+					}
+
 			)
 		}
 
@@ -555,7 +617,11 @@ Last modified 25 April 2018
 				var material = new THREE.MeshLambertMaterial( { color: 0x009999 } );
 				var pmaterial = new Physijs.createMaterial(material,0.9,0.5);
 				key3 = new Physijs.BoxMesh( geometry, pmaterial, 0 )
+<<<<<<< HEAD
 				key3.position.set(randN(115)-50,2,randN(115)-40);
+=======
+				key3.position.set(30,2,20);
+>>>>>>> Hints
 				key3.addEventListener('collision',
 				function( other_object, relative_velocity, relative_rotation, contact_normal ){
 					if (other_object == avatar) {
@@ -707,6 +773,18 @@ Last modified 25 April 2018
 		}else if (gameState.scene == 'startscreen' && event.key=='p') {
 			gameState.scene = 'level1';
 			playGameMusic('Ossuary.wav')
+			hint1 = createBoxMesh2(0x00ff00);
+			hint1.position.set(-25,5,0)
+			hint1.scale.set(2,2,2)
+			hint1.addEventListener( 'collision',
+				function( other_object, relative_velocity, relative_rotation, contact_normal ) {
+					if (other_object == avatar){
+						console.log('User found hint #1');
+						infoUp.style.display = 'block';
+				}
+			}
+			)
+			scene.add(hint1);
 			return;
 		}else if (gameState.scene == 'level1' && event.key=='p') {
 			createClock();
@@ -864,12 +942,16 @@ Last modified 25 April 2018
 				renderer.render(levelOneScreen, startCam);
 				break;
 			case "level2":
-				//audioLoader.stop()
+				key1.position.set(-100,-100,0);
+				key1.__dirtyPosition = true;
 				scene.simulate();
 				renderer.render(levelTwoScreen, startCam);
 				break;
 			case "level3":
-				//audioLoader.stop()
+				hint2.position.set(-100,-100,0);
+				hint2.__dirtyPosition = true;
+				key2.position.set(-100,-100,0);
+				key2.__dirtyPosition = true;
 				scene.simulate();
 				renderer.render(levelThreeScreen, startCam);
 				break;
@@ -893,7 +975,7 @@ Last modified 25 April 2018
 		if (gameState.scene != 'startscreen' && gameState.scene != 'level1' ){
 			var info = document.getElementById("info");
 		 info.innerHTML=
-		 	'<div style="font-size:24pt">Score:  ' + gameState.score +
+		 	'<div style="font-size:18pt">Score:  ' + gameState.score +
 		 	'         Health:  ' + gameState.health +
 		 	'         Litter Picked Up:  ' + gameState.litterScore +
 		 	'         Time:  ' + Math.trunc(screenClock.getElapsedTime()) + '</div>' ;
