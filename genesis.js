@@ -153,7 +153,7 @@ Last modified 25 April 2018
 			// AVATAR CAMERA
 			avatarCam = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.1, 1000 );
 			// ADD OBJECTS
-			addBalls(20);
+			addCrumpledPaper(20);
 			addCubes(30);
 			addToxicWaste(80);
 			avatar = createAvatar();
@@ -270,20 +270,18 @@ Last modified 25 April 2018
 		// METHODS FOR ADDING DIFFERENT TYPES OF LITTER
 
 		//ADD LITTER, TYPE 1
-		function addRings(numRings){
-			for (i=0;i<numRings;i++){
-				var ring = createRingMesh(1,0.5);
-				ring.position.set(randN(115)-50,20,randN(115)-40);
-				scene.add(ring);
-				// when collided with, the enemy/npc is teleported to a new location away
-				//from the avatar (like a protection object)
-				ring.addEventListener('collision',
-				function( other_object, relative_velocity, relative_rotation, contact_normal ){
-					if (other_object == avatar) {
-						console.log("avatar picked up 1 litter");
+		function addCoke(numCoke){
+			for(i=0;i<numCoke;i++){
+				var coke = initCokeCan();
+				coke.position.set(randN(115)-50,20,randN(115)-40);
+				scene.add(coke);
+				coke.addEventListener('collision',
+				function(other_object, relative_velocity, relative_rotation, contact_normal){
+					if(other_object == avatar){
+						console.log("avatar picked up 1 coke can");
 						soundEffect('good.wav');
 						gameState.litterScore += 1;
-						// Get rid of the cube once collision occurs
+						//Get rid of coke can once collision  occurs
 						this.position.y = this.position.y - 100;
 						this.__dirtyPosition = true;
 					}
@@ -317,19 +315,18 @@ Last modified 25 April 2018
 
 
 		//ADD LITTER, TYPE 3
-		function addBalls(numBalls){
+		function addCrumpledPaper(numBalls){
 			for(i=0;i<numBalls;i++){
-				var ball = createBall();
-				ball.position.set(randN(115)-50,20,randN(115)-40);
-				scene.add(ball);
-				ball.addEventListener( 'collision',
+				var paper = createPaper();
+				paper.position.set(randN(115)-50,20,randN(115)-40);
+				scene.add(paper);
+				paper.addEventListener( 'collision',
 					function( other_object, relative_velocity, relative_rotation, contact_normal ) {
 						if (other_object==avatar){
-							console.log("avatar picked up 1 litter");
+							console.log("avatar picked up 1 crumpled paper");
 							soundEffect('good.wav');
 							gameState.litterScore += 1;  // Score goes up by 1
-							// Make the ball drop below the scene
-							//(Threejs doesn't let us remove it from the scene)
+							// Make the paper drop below the scene
 							this.position.y = this.position.y - 100;
 							this.__dirtyPosition = true;
 						}
@@ -397,6 +394,16 @@ Last modified 25 April 2018
 			return toxMesh;
 		}
 
+		//COKE CAN
+		function initCokeCan(){
+			var geometry = new THREE.CylinderGeometry(0.5,0.5,2.0,30);
+			var texture = new THREE.TextureLoader().load('../images/cokeCan.jpg');
+			var material = new THREE.MeshLambertMaterial({color: 0xaaaaaa, map: texture, side:THREE.DoubleSide});
+			var cokeMesh = new Physijs.BoxMesh(geometry, material);
+			cokeMesh.setDamping(0.1,0.1);
+			cokeMesh.castShadow = true;
+			return cokeMesh
+		}
 
 		//PLANE
 		function initPlaneMesh(image){
@@ -570,14 +577,23 @@ Last modified 25 April 2018
 
 		//CUBE
 		function createCube(){
-			//var geometry = new THREE.SphereGeometry( 4, 20, 20);
 			var geometry = new THREE.BoxGeometry( 1, 1, 1);
-			var material = new THREE.MeshLambertMaterial( { color: 0x9ca175} );
-			var pmaterial = new Physijs.createMaterial(material,0.9,0.5);
-			var mesh = new Physijs.BoxMesh( geometry, material );
-			mesh.setDamping(0.1,0.1);
-			mesh.castShadow = true;
-			return mesh;
+			var texture = new THREE.TextureLoader().load('../images/cardboardBox.jpg');
+			var material = new THREE.MeshLambertMaterial( {color: 0xaaaaaa, map: texture, side: THREE.DoubleSide} );
+			var cardboardMesh = new Physijs.BoxMesh(geometry, material);
+			cardboardMesh.setDamping(0.1,0.1);
+			cardboardMesh.castShadow = true;
+			return cardboardMesh;
+		}
+
+		function createPaper(){
+			var geometry = new THREE.IcosahedronGeometry(1);
+			var texture = new THREE.TextureLoader().load('../images/crumpledPaper.jpg');
+			var material = new THREE.MeshLambertMaterial({ color: 0xaaaaaa, map: texture, side: THREE.DoubleSide});
+			var paperBall = new Physijs.BoxMesh(geometry, material);
+			paperBall.setDamping(0.1,0.1);
+			paperBall.castShadow = true;
+			return paperBall;
 		}
 
 
@@ -656,9 +672,9 @@ Last modified 25 April 2018
 			gameState.score = 0;
 			gameState.health = 10;
 			enemy.position.set(randN(20),30,randN(20));
-			addBalls(20);
+			addCrumpledPaper(20);
 			addCubes(30);
-			addRings(100);
+			addCoke(100);
 			return;
 		}else if (gameState.scene == 'startscreen' && event.key=='p') {
 			gameState.scene = 'level1';
@@ -671,9 +687,9 @@ Last modified 25 April 2018
 			gameState.level = 'one'
 			gameState.score = 0;
 			gameState.health = 10;
-			addBalls(20);
+			addCrumpledPaper(20);
 			addCubes(30);
-			addRings(100);
+			addCoke(100);
 			ground = createGround('wasteldgrnd.jpg');
 			scene.add(ground);
 			skybox = createSkyBox('wasteland.jpg',1);
@@ -687,9 +703,9 @@ Last modified 25 April 2018
 			gameState.level = 'two'
 			// gameState.score = 0;
 			// gameState.health = 10;
-			addBalls(10);
+			addCrumpledPaper(10);
 			addCubes(15);
-			addRings(30);
+			addCoke(30);
 			ground = createGround('grass.jpeg');
 			scene.add(ground);
 			skybox = createSkyBox('sky.jpg',1);
@@ -703,9 +719,9 @@ Last modified 25 April 2018
 			gameState.level = 'three'
 			// gameState.score = 0;
 			// gameState.health = 10;
-			addBalls(10);
+			addCrumpledPaper(10);
 			addCubes(15);
-			addRings(30);
+			addCoke(30);
 			ground = createGround('flowers.jpg');
 			scene.add(ground);
 			skybox = createSkyBox('clouds.jpg',1);
