@@ -169,7 +169,7 @@ Last modified 25 April 2018
 			addCubes(30);
 			addToxicWaste(80);
 			avatar = createAvatar();
-			avatar.position.set(0,40,0);
+			avatar.position.set(-25,15,-60);
 			scene.add(avatar);
 			gameState.camera = avatarCam;
 
@@ -350,6 +350,48 @@ Last modified 25 April 2018
 			}
 		}
 
+		//ADD TREES
+		function addTrees(numTrees){
+			for(i=0;i<numTrees;i++){
+				var tree = initTree();
+				tree.position.set(randN(115)-50,2,randN(115)-40);
+				scene.add(tree);
+			}
+		}
+		//ADD ROCKS
+		function addRocks(numRocks){
+			for(i=0;i<numRocks;i++){
+				var rock = initRock(1);
+				rock.position.set(randN(115)-50,0,randN(115)-40);
+				scene.add(rock);
+				var rock = initRock(2);
+				rock.position.set(randN(115)-50,0,randN(115)-40);
+				scene.add(rock);
+				var rock = initRock(3);
+				rock.position.set(randN(115)-50,0,randN(115)-40);
+				scene.add(rock);
+			}
+		}
+			//ADD FLOWERS
+		function addFlowers(numFlowers){
+			for(i=0;i<numFlowers;i++){
+				var flower = initFlower("pink");
+				flower.position.set(randN(115)-50,1,randN(115)-40);
+				scene.add(flower);
+				var flower = initFlower("yellow");
+				flower.position.set(randN(115)-50,1,randN(115)-40);
+				scene.add(flower);
+				var flower = initFlower("blue");
+				flower.position.set(randN(115)-50,1,randN(115)-40);
+				scene.add(flower);
+				var flower = initFlower("white");
+				flower.position.set(randN(115)-50,1,randN(115)-40);
+				scene.add(flower);
+				var flower = initFlower("red");
+				flower.position.set(randN(115)-50,1,randN(115)-40);
+				scene.add(flower);
+			}
+		}
 
 		//ADD LITTER, TYPE 4 -- NEVER USED
 		function addIcos(numIco){ // specify the number of litter, type 4 to add to scene
@@ -415,7 +457,182 @@ Last modified 25 April 2018
 					break;
 			}
 		}
+		function initTree(){
+				 geometry = new THREE.BoxGeometry( 1, 1, 1 );
+					var leaveDarkMaterial = new THREE.MeshLambertMaterial( { color: 0x91E56E } );
+					var leaveLightMaterial = new THREE.MeshLambertMaterial( { color: 0xA2FF7A } );
+					var leaveDarkDarkMaterial = new THREE.MeshLambertMaterial( { color: 0x71B356 } );
+					var stemMaterial = new THREE.MeshLambertMaterial( { color: 0x7D5A4F } );
 
+					var stem = new THREE.Mesh( geometry, stemMaterial );
+					stem.position.set( 0, 0, 0 );
+					stem.scale.set( 0.3, 1.5, 0.3 );
+
+					var squareLeave01 = new THREE.Mesh( geometry, leaveDarkMaterial );
+					squareLeave01.position.set( 0.5, 1.6, 0.5 );
+					squareLeave01.scale.set( 0.8, 0.8, 0.8 );
+
+					var squareLeave02 = new THREE.Mesh( geometry, leaveDarkMaterial );
+					squareLeave02.position.set( -0.4, 1.3, -0.4 );
+					squareLeave02.scale.set( 0.7, 0.7, 0.7 );
+
+					var squareLeave03 = new THREE.Mesh( geometry, leaveDarkMaterial );
+					squareLeave03.position.set( 0.4, 1.7, -0.5 );
+					squareLeave03.scale.set( 0.7, 0.7, 0.7 );
+
+					var leaveDark = new THREE.Mesh( geometry, leaveDarkMaterial );
+					leaveDark.position.set( 0, 1.2, 0 );
+					leaveDark.scale.set( 1, 2, 1 );
+
+					var leaveLight = new THREE.Mesh( geometry, leaveLightMaterial );
+					leaveLight.position.set( 0, 1.2, 0 );
+					leaveLight.scale.set( 1.1, 0.5, 1.1 );
+
+					var ground = new THREE.Mesh( geometry, leaveDarkDarkMaterial );
+					ground.position.set( 0, -1, 0 );
+					ground.scale.set( 2.4, 0.8, 2.4 );
+
+					tree = new THREE.Group();
+					tree.add( leaveDark );
+					tree.add( leaveLight );
+					tree.add( squareLeave01 );
+					tree.add( squareLeave02 );
+					tree.add( squareLeave03 );
+					tree.add( ground );
+					tree.add( stem );
+
+					tree.scale.z=4;
+					tree.scale.y=4;
+					tree.scale.x=4;
+
+					return tree;
+			}
+
+			function initRock(size){
+				 geometry = new THREE.DodecahedronBufferGeometry(1,0);
+					var leaveDarkMaterial = new THREE.MeshLambertMaterial( { color: 0x969696 } );
+					var leaveLightMaterial = new THREE.MeshLambertMaterial( { color: 0xc5c5c5 } );
+					var leaveDarkDarkMaterial = new THREE.MeshLambertMaterial( { color: 0x71B356 } );
+					var stemMaterial = new THREE.MeshLambertMaterial( { color: 0x7D5A4F } );
+
+					var stem = new THREE.Mesh( geometry, stemMaterial );
+					stem.position.set( 0, 0, 0 );
+					stem.scale.set( 0.3, 1.5, 0.3 );
+
+					var squareLeave01 = new THREE.Mesh( geometry, leaveDarkMaterial );
+					squareLeave01.position.set( 0.5, 1.6, 0.5 );
+					squareLeave01.scale.set( 0.8, 0.8, 0.8 );
+
+					var squareLeave02 = new THREE.Mesh( geometry, leaveDarkMaterial );
+					squareLeave02.position.set( -0.4, 1.3, -0.4 );
+					squareLeave02.scale.set( 0.7, 0.7, 0.7 );
+
+					var squareLeave03 = new THREE.Mesh( geometry, leaveDarkMaterial );
+					squareLeave03.position.set( 0.4, 1.7, -0.5 );
+					squareLeave03.scale.set( 0.7, 0.7, 0.7 );
+
+					var leaveDark = new THREE.Mesh( geometry, leaveDarkMaterial );
+					leaveDark.position.set( 0, 1.2, 0 );
+					leaveDark.scale.set( 1, 2, 1 );
+
+					var leaveLight = new THREE.Mesh( geometry, leaveLightMaterial );
+					leaveLight.position.set( 0, 1.2, 0 );
+					leaveLight.scale.set( 1.1, 0.5, 1.1 );
+
+					var ground = new THREE.Mesh( geometry, leaveDarkDarkMaterial );
+					ground.position.set( 0, -1, 0 );
+					ground.scale.set( 2.4, 0.8, 2.4 );
+
+					tree = new THREE.Group();
+					tree.add( leaveDark );
+
+					tree.scale.z=size;
+					tree.scale.y=size/2;
+					tree.scale.x=size;
+
+					return tree;
+			}
+
+			function initFlower(color){
+				 geometry = new THREE.BoxGeometry( 1, 1, 1 );
+				 var leaveDarkMaterial;
+				 var leaveLightMaterial;
+				 var leaveDarkDarkMaterial;
+				 var stemMaterial;
+				 if (color=="pink"){
+					leaveDarkMaterial = new THREE.MeshLambertMaterial( { color: 0xff8b9d } );
+					leaveLightMaterial = new THREE.MeshLambertMaterial( { color: 0xFFB6C1 } );
+					leaveDarkDarkMaterial = new THREE.MeshLambertMaterial( { color: 0x98008a } );
+					stemMaterial = new THREE.MeshLambertMaterial( { color: 0x009803 } );
+	}
+
+	if (color=="yellow"){
+	 leaveDarkMaterial = new THREE.MeshLambertMaterial( { color: 0xe5de41 } );
+	 leaveLightMaterial = new THREE.MeshLambertMaterial( { color: 0xfff964 } );
+	 leaveDarkDarkMaterial = new THREE.MeshLambertMaterial( { color: 0x9f9918 } );
+	 stemMaterial = new THREE.MeshLambertMaterial( { color: 0x009803 } );
+	}
+	if (color=="blue"){
+	 leaveDarkMaterial = new THREE.MeshLambertMaterial( { color: 0x28b0d8 } );
+	 leaveLightMaterial = new THREE.MeshLambertMaterial( { color: 0x7edefb } );
+	 leaveDarkDarkMaterial = new THREE.MeshLambertMaterial( { color: 0x9f9918 } );
+	 stemMaterial = new THREE.MeshLambertMaterial( { color: 0x009803 } );
+	}
+
+	if (color=="white"){
+	 leaveDarkMaterial = new THREE.MeshLambertMaterial( { color: 0xd7dddf } );
+	 leaveLightMaterial = new THREE.MeshLambertMaterial( { color: 0xffffff } );
+	 leaveDarkDarkMaterial = new THREE.MeshLambertMaterial( { color: 0x9f9918 } );
+	 stemMaterial = new THREE.MeshLambertMaterial( { color: 0x009803 } );
+	}
+	if (color=="red"){
+	 leaveDarkMaterial = new THREE.MeshLambertMaterial( { color: 0xb40000 } );
+	 leaveLightMaterial = new THREE.MeshLambertMaterial( { color: 0xff1717 } );
+	 leaveDarkDarkMaterial = new THREE.MeshLambertMaterial( { color: 0x9f9918 } );
+	 stemMaterial = new THREE.MeshLambertMaterial( { color: 0x009803 } );
+	}
+					var stem = new THREE.Mesh( geometry, stemMaterial );
+					stem.position.set( 0, 0, 0 );
+					stem.scale.set( 0.3, 1.5, 0.3 );
+
+					var squareLeave01 = new THREE.Mesh( geometry, leaveDarkMaterial );
+					squareLeave01.position.set( 0.5, 1.6, 0.5 );
+					squareLeave01.scale.set( 0.8, 0.8, 0.8 );
+
+					var squareLeave02 = new THREE.Mesh( geometry, leaveDarkMaterial );
+					squareLeave02.position.set( -0.4, 1.3, -0.4 );
+					squareLeave02.scale.set( 0.7, 0.7, 0.7 );
+
+					var squareLeave03 = new THREE.Mesh( geometry, leaveDarkMaterial );
+					squareLeave03.position.set( 0.4, 1.7, -0.5 );
+					squareLeave03.scale.set( 0.7, 0.7, 0.7 );
+
+					var leaveDark = new THREE.Mesh( geometry, leaveDarkMaterial );
+					leaveDark.position.set( 0, 1.2, 0 );
+					leaveDark.scale.set( 1, 2, 1 );
+
+					var leaveLight = new THREE.Mesh( geometry, leaveLightMaterial );
+					leaveLight.position.set( 0, 1.2, 0 );
+					leaveLight.scale.set( 1.1, 0.5, 1.1 );
+
+					var ground = new THREE.Mesh( geometry, leaveDarkDarkMaterial );
+					ground.position.set( 0, -1, 0 );
+					ground.scale.set( 2.4, 0.8, 2.4 );
+
+					tree = new THREE.Group();
+					tree.add( leaveDark );
+					tree.add( leaveLight );
+					tree.add( squareLeave01 );
+					tree.add( squareLeave02 );
+					tree.add( squareLeave03 );
+					tree.add( stem );
+
+					tree.scale.z=1;
+					tree.scale.y=1;
+					tree.scale.x=1;
+
+					return tree;
+			}
 		//TOXIC WASTE
 		function initToxicWaste(){
 			var geometry = new THREE.CylinderGeometry( 1, 1, 3, 30);
@@ -792,6 +1009,7 @@ Last modified 25 April 2018
 			addCrumpledPaper(20);
 			addCubes(30);
 			addCoke(100);
+			addRocks(30);
 			ground = createGround('wasteldgrnd.jpg');
 			scene.add(ground);
 			skybox = createSkyBox('wasteland.jpg',1);
@@ -808,6 +1026,7 @@ Last modified 25 April 2018
 			addCrumpledPaper(10);
 			addCubes(15);
 			addCoke(30);
+			addTrees(30);
 			ground = createGround('grass.jpeg');
 			scene.add(ground);
 			skybox = createSkyBox('sky.jpg',1);
@@ -824,6 +1043,7 @@ Last modified 25 April 2018
 			addCrumpledPaper(10);
 			addCubes(15);
 			addCoke(30);
+			addFlowers(50);
 			ground = createGround('flowers.jpg');
 			scene.add(ground);
 			skybox = createSkyBox('clouds.jpg',1);
