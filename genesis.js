@@ -160,11 +160,6 @@ Last modified 25 April 2018
 			avatar.position.set(0,40,0);
 			scene.add(avatar);
 			gameState.camera = avatarCam;
-			//ADD MUSIC
-			if (gameState.level == 'one'){
-				console.log('playing game music')
-				playGameMusic('Ossuary.wav')
-			}
 
 	}
 
@@ -498,6 +493,8 @@ Last modified 25 April 2018
 			function( other_object, relative_velocity, relative_rotation, contact_normal ){
 				if (other_object == avatar) {
 					gameState.scene = 'level2';
+					globalSound.stop();
+					playGameMusic('LightMood.mp3');
 				}
 			}
 		)
@@ -507,7 +504,7 @@ Last modified 25 April 2018
 
 			function initKeyLevelTwo(){
 				var geometry = new THREE.DodecahedronGeometry(0.5,0);
-				var material = new THREE.MeshLambertMaterial( { color: 0x009999 } );
+				var material = new THREE.MeshLambertMaterial( { color: 0x00ff00 } );
 				var pmaterial = new Physijs.createMaterial(material,0.9,0.5);
 				key2 = new Physijs.BoxMesh( geometry, pmaterial, 0 )
 				key2.position.set(20,2,20);
@@ -515,10 +512,10 @@ Last modified 25 April 2018
 				function( other_object, relative_velocity, relative_rotation, contact_normal ){
 					if (other_object == avatar) {
 						gameState.scene = 'level3';
+						playGameMusic('AllFallDown.mp3')
 					}
 				}
 			)
-
 				scene.add(key2);
 		}
 
@@ -606,7 +603,7 @@ Last modified 25 April 2018
 		camera.add( listener );
 
 		// Create a global audio source
-		globalSound = new THREE.Audio( listener );
+		 globalSound = new THREE.Audio( listener );
 
 		// Load a sound and set it as the Audio object's buffer
 		var audioLoader = new THREE.AudioLoader();
@@ -615,7 +612,6 @@ Last modified 25 April 2018
 			globalSound.setLoop( true );
 			globalSound.setVolume( 0.05 );
 			globalSound.play();
-
 		});
 	}
 
@@ -727,6 +723,8 @@ Last modified 25 April 2018
 			skybox = createSkyBox('clouds.jpg',1);
 			scene.add(skybox);
 			initKeyLevelThree();
+			globalSound.stop();
+			playGameMusic('AllFallDown.mp3')
 			return;
 		}else if (gameState.scene == 'youwon') {
 			screenClock.stop();
@@ -831,12 +829,12 @@ Last modified 25 April 2018
 				renderer.render(levelOneScreen, startCam);
 				break;
 			case "level2":
-				//globalSound.stop()
-				playGameMusic('LightMood.mp3')
+				//audioLoader.stop()
 				scene.simulate();
 				renderer.render(levelTwoScreen, startCam);
 				break;
 			case "level3":
+				//audioLoader.stop()
 				scene.simulate();
 				renderer.render(levelThreeScreen, startCam);
 				break;
