@@ -404,27 +404,6 @@ Last modified 25 April 2018
 			}
 		}
 
-		//ADD LITTER, TYPE 4 -- NEVER USED
-		function addIcos(numIco){ // specify the number of litter, type 4 to add to scene
-			for(i=0;i<numIco;i++){
-				var ico = createIcosahedron();
-				ico.position.set(randN(115)-50,20,randN(115)-40);
-				scene.add(ico);
-				ico.addEventListener( 'collision',
-					function( other_object, relative_velocity, relative_rotation, contact_normal ) {
-						if (other_object==avatar){
-							console.log("avatar picked up 1 litter");
-							soundEffect('good.wav');
-							gameState.litterScore += 1;  // Score goes up by 1
-							//(Threejs doesn't let us remove it from the scene)
-							this.position.y = this.position.y - 100;
-							this.__dirtyPosition = true;
-						}
-					}
-				)
-			}
-		}
-
 
 		//ADD TOXIC WASTE TO SCENE
 		function addToxicWaste(quantity){
