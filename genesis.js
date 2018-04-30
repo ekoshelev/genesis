@@ -73,8 +73,8 @@ Last modified 25 April 2018
 
 	//Initialize Physijs
 	function initPhysijs(){
-		Physijs.scripts.worker = '/js/physijs_worker.js';
-		Physijs.scripts.ammo = '/js/ammo.js';
+		Physijs.scripts.worker = '/physijs_worker.js';
+		Physijs.scripts.ammo = '/ammo.js';
 	}
 
 
